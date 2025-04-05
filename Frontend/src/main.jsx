@@ -10,8 +10,13 @@ import {Login} from "./pages/Login.jsx"
 import { Signup } from './pages/Signup.jsx'
 import { ResetPassword } from './pages/ResetPassword.jsx'
 import { VerifyEmail } from './pages/VerifyEmail.jsx'
+import { DashboardHeader, DashboardLayout, Sidebar } from "./components/Dashboard";
+import { DashboardHome } from './components/Dashboard/pages/DashboardHome.jsx'
+import { Transactions } from './components/Dashboard/pages/Transactions.jsx'
+import Categories from './components/Dashboard/pages/Categories.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
+    <>
     <Route path="/" element={<Layout/>}>
         <Route path='' element={<Home/>}/>
         <Route path='login' element={<Login/>}/>
@@ -19,6 +24,13 @@ const router = createBrowserRouter(
         <Route path='reset-password' element={<ResetPassword/>}/>
         <Route path='verify-email' element={<VerifyEmail/>} />
       </Route>
+
+      <Route path='/dashboard' element={<DashboardLayout/>} >
+      <Route path='' element={<DashboardHome/>}/>
+      <Route path='transaction' element={<Transactions/>}/>
+      <Route path='categories' element={<Categories/>}/>
+      </Route>
+      </>
   )
 )
 
