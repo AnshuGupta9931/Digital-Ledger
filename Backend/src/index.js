@@ -3,6 +3,7 @@ import connectDB from "./db/index.js";
 import dotenv from "dotenv"
 import express from "express"
 
+import userRoutes from "./routes/User.js";
 
 //const express = require("express");
 const app = express();
@@ -20,6 +21,8 @@ app.use(express.json());
 //load config from env file
 const PORT = process.env.PORT || 7000;
 
+//mount the API Routes
+app.use("/api/v1/auth", userRoutes);
 
 //start server
 app.listen(PORT, () => {
