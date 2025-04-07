@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FiHome, FiList,FiTag, FiX,FiRepeat} from "react-icons/fi";
+import { FiHome, FiList,FiTag, FiX,FiRepeat,FiBarChart2} from "react-icons/fi";
 
 const links = [
   { name: "dashboard", path: "/dashboard", icon: <FiHome /> },
@@ -12,7 +12,11 @@ const links = [
   },
   {
     name: 'recuringbills', path : "/dashboard/recuringbills", icon: <FiRepeat/>
-  }
+  },
+  {
+    name: 'reports', path : "/dashboard/reports", icon: <FiBarChart2/>
+  },
+  
 ];
 
 export default function Sidebar({ closeSidebar }) {
