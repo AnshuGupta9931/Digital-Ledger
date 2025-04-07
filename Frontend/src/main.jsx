@@ -14,6 +14,7 @@ import { DashboardHeader, DashboardLayout, Sidebar } from "./components/Dashboar
 import { DashboardHome } from './components/Dashboard/pages/DashboardHome.jsx'
 import { Transactions } from './components/Dashboard/pages/Transactions.jsx'
 import Categories from './components/Dashboard/pages/Categories.jsx'
+import { RecurringBills } from './components/Dashboard/pages/RecuringBills.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path='' element={<DashboardHome/>}/>
       <Route path='transaction' element={<Transactions/>}/>
       <Route path='categories' element={<Categories/>}/>
+      <Route path='recuringbills' element={<RecurringBills/>} />
       </Route>
       </>
   )
