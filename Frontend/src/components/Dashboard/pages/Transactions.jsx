@@ -33,11 +33,11 @@ const transactions = [
 
 export const Transactions = () => {
   return (
-    <div className="p-6 w-full bg-white min-h-screen">
+    <div className="p-6 w-full bg-[#fefcf8] text-gray-800">
       {transactions.map((tx, index) => (
         <div
           key={index}
-          className="bg-[#fffaf3] p-4 mb-4 rounded-lg shadow-sm border border-gray-200"
+          className="bg-[#fffaf3] p-4 mb-4 rounded-lg border border-gray-200 shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.08)] transition-all duration-300"
         >
           <p className="text-sm text-gray-500 mb-1">{tx.date}</p>
           <div className="flex items-center justify-between">
@@ -54,7 +54,9 @@ export const Transactions = () => {
                 tx.amount >= 0 ? "text-green-600" : "text-red-600"
               }`}
             >
-              {tx.amount >= 0 ? `$${tx.amount.toFixed(2)}` : `-$${Math.abs(tx.amount).toFixed(2)}`}
+              {tx.amount >= 0
+                ? `$${tx.amount.toFixed(2)}`
+                : `-$${Math.abs(tx.amount).toFixed(2)}`}
             </p>
           </div>
         </div>

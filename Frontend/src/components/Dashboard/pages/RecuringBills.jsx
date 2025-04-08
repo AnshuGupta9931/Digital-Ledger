@@ -9,14 +9,15 @@ const bills = [
 
 export const RecurringBills = () => {
   return (
-    <div className="p-6 w-full min-h-screen bg-white text-gray-800">
+    <div className="w-full min-h-screen bg-[#fefcf8] p-10 text-gray-800">
       <div className="flex justify-between items-center mb-6">
         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-[#162028] transition">
           + Add Bill
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
+      {/* Glow-up container */}
+      <div className="bg-white rounded-2xl shadow-[0_6px_24px_rgba(37,99,235,0.15)] hover:shadow-[0_10px_40px_rgba(37,99,235,0.25)] transition-all duration-300 p-4 overflow-x-auto">
         <table className="w-full table-auto text-left">
           <thead>
             <tr className="border-b text-sm text-gray-600 uppercase">

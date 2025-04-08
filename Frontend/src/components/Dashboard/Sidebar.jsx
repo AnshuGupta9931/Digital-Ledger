@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FiHome, FiList,FiTag, FiX,FiRepeat,FiBarChart2} from "react-icons/fi";
+import { FiHome, FiList,FiTag, FiX,FiRepeat,FiBarChart2,FiUsers,FiSettings,FiTrendingUp } from "react-icons/fi";
+import { FaHandshake } from "react-icons/fa";
+import { HiUserGroup } from "react-icons/hi";
 
 const links = [
   { name: "dashboard", path: "/dashboard", icon: <FiHome /> },
@@ -15,6 +17,21 @@ const links = [
   },
   {
     name: 'reports', path : "/dashboard/reports", icon: <FiBarChart2/>
+  },
+  {
+    name: 'friends', path : "/dashboard/friends", icon: <FiUsers />
+  },
+  {
+    name: 'debt-settlements', path : "/dashboard/debt-settlements", icon: <FaHandshake />
+  },
+  {
+    name: 'savings', path : "/dashboard/savings", icon: <FiTrendingUp />
+  },
+  {
+    name: 'groups', path : "/dashboard/groups", icon: <HiUserGroup />
+  },
+  {
+    name: 'settings', path : "/dashboard/settings", icon: <FiSettings />
   },
   
 ];
