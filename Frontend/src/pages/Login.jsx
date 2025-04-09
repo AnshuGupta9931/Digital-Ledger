@@ -1,33 +1,114 @@
-import React from 'react';
-import StyledWrapper from './FormStyles';
-import { useNavigate } from 'react-router-dom';
-export const Login = () => {
-  const navigate = useNavigate();
+import React from "react";
+import LoginImage from "../assets/Images/Login.png"
+import { FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useState } from "react"
+//import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { useDispatch } from "react-redux"
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { login } from "../services/operations/authAPI.jsx"
+
+export const Login =()=> {
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
+
+  const [showPassword, setShowPassword] = useState(false)
+
+  const { email, password } = formData
+
+  const handleOnChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    dispatch(login(email, password, navigate))
+  }
+
+
   return (
-    <StyledWrapper>
-      <div className="card">
-        <div className="card2">
-          <form className="form">
-            <p id="heading">Login</p>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
-              </svg>
-              <input type="text" className="input-field" placeholder="Username" autoComplete="off" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#e3edf7] to-[#f3f7fb] p-4">
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-xl flex flex-col md:flex-row overflow-hidden">
+        {/* Left Panel */}
+        <div className="w-full md:w-1/2 p-10">
+          <div className="flex items-center space-x-2 mb-10">
+            <div className="w-6 h-6 bg-black rounded-full" />
+            <h1 className="text-xl font-semibold">DIGITAL LEDGER</h1>
+          </div>
+
+          <h2 className="text-2xl font-bold mb-2">Welcome Back!</h2>
+          <p className="text-gray-500 mb-6">Please enter log in details below</p>
+
+          <form className="space-y-4" onSubmit={handleOnSubmit}>
+            <input
+              name="email"
+              value={email}
+              onChange={handleOnChange}
+              type="email"
+              placeholder="Email"
+              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+            />
+            <div className="relative">
+              <input
+                name="password"
+                value={password}
+                onChange={handleOnChange}
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
+              />
+              <FaEyeSlash className="absolute top-3 right-4 text-gray-400" />
             </div>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-              </svg>
-              <input type="password" className="input-field" placeholder="Password" />
-            </div>
-            <div className="btn">
-              <button className="button1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-            </div>
-            <button className="button3" onClick={()=>navigate("/reset-password")}>Forgot Password</button>
+            <Link to="/reset-password">
+              <div className="text-right text-sm text-gray-500 hover:underline cursor-pointer">
+                Forgot password
+              </div>
+            </Link>
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-900"
+            >
+              Sign in
+            </button>
           </form>
+
+          <div className="flex items-center my-6">
+            <hr className="flex-grow border-gray-300" />
+            <span className="px-2 text-sm text-gray-500">or continue</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          <button className="w-full flex items-center justify-center gap-2 border py-3 rounded-xl hover:bg-gray-100">
+            <FcGoogle className="text-xl" />
+            Log in with Google
+          </button>
+
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Don’t have an account? <span className="text-black font-semibold cursor-pointer hover:underline">Sign Up</span>
+          </p>
         </div>
+
+        {/* Right Panel */}
+        <div className="w-full md:w-1/2 bg-black flex items-center justify-center text-white p-10 relative">
+          <img
+            src={LoginImage}
+            alt="3D Boy with Laptop"
+            className="w-[85%] h-auto object-contain"
+          />
+        </div>
+
+
       </div>
-    </StyledWrapper>
+    </div>
   );
 }
