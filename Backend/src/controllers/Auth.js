@@ -4,7 +4,9 @@
 import {User} from "../models/User.js"
 import {Profile} from "../models/Profile.js"
 import { OTP } from "../models/OTP.js";
-
+import {otpTemplate} from "../mail_templates/emailVerificationTemplate.js"
+import { passwordUpdated } from "../mail_templates/PasswordUpdate.js";
+import { mailSender } from "../utils/mailSender.js";
 
 import otpGenerator from "otp-generator"
 import bcrypt from "bcrypt"
@@ -63,10 +65,10 @@ export const sendOTP = async (req, res) => {
         const otpBody = await OTP.create(otpPayload);
         console.log(otpBody);
 
-        //const emailTemplate = otpTemplate(otp);
+        const emailTemplate = otpTemplate(otp);
 
         // Send Email using `mailsender.js`
-        //await mailSender (email, "Your StudyNotion OTP Code", emailTemplate);
+        await mailSender (email, "Your Digital-Ledger OTP Code", emailTemplate);
 
 
         //return response successful
@@ -290,24 +292,24 @@ export const changePassword = async (req, res) => {
         )
 
         // Send notification email
-        // try{
-        //     const emailResponse = await mailSender(
-        //     updateUserDetails.email,
-        //     "Password for your account has been updated",
-        //     passwordUpdated(
-        //         updateUserDetails.email,
-        //         `Password updated successfully for ${updateUserDetails.firstName} ${updateUserDetails.lastName}`
-        //     )
-        //     )
-        //     console.log("Email sent successfully:", emailResponse.response)
-        // }catch (error) {
-        //     // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
-        //     console.error("Error occurred while sending email:", error)
-        //     return res.status(500).json({
-        //     success: false,
-        //     message: "Error occurred while sending email",
-        //     })
-        // }
+        try{
+            const emailResponse = await mailSender(
+            updateUserDetails.email,
+            "Password for your account has been updated",
+            passwordUpdated(
+                updateUserDetails.email,
+                `Password updated successfully for ${updateUserDetails.firstName} ${updateUserDetails.lastName}`
+            )
+            )
+            console.log("Email sent successfully:", emailResponse.response)
+        }catch (error) {
+            // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
+            console.error("Error occurred while sending email:", error)
+            return res.status(500).json({
+            success: false,
+            message: "Error occurred while sending email",
+            })
+        }
 
         //return response
         return res.status(200).json({

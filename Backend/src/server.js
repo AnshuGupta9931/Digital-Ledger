@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import connectDB from "./db/index.js";
 import dotenv from "dotenv"
 import express from "express"
+import cors from "cors"
 
 import userRoutes from "./routes/User.js";
 
@@ -17,6 +18,10 @@ connectDB()
 //Middleware 
 app.use(express.json());
 //app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173", // frontend URL
+    credentials: true // if you're using cookies or auth headers
+  }));
 
 //load config from env file
 const PORT = process.env.PORT || 7000;
