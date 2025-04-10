@@ -1,6 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import React from 'react'
+
+//Am
+import {Provider} from "react-redux"
+import {configureStore} from "@reduxjs/toolkit"
+import rootReducer from "./reducers/index.jsx"
+import {Toaster} from "react-hot-toast"
+import "./index.css"
+
 import './index.css'
 import App from './App.jsx'
 import {createBrowserRouter, createRoutesFromElements, RouterProvider,Route} from "react-router-dom"
@@ -10,12 +18,16 @@ import {Login} from "./pages/Login.jsx"
 import { Signup } from './pages/Signup.jsx'
 import { ResetPassword } from './pages/ResetPassword.jsx'
 import { VerifyEmail } from './pages/VerifyEmail.jsx'
+<<<<<<< HEAD
+import { UpdatePassword } from './pages/UpdatePassword.jsx'
+=======
 import { DashboardHeader, DashboardLayout, Sidebar } from "./components/Dashboard";
 import { DashboardHome } from './components/Dashboard/pages/DashboardHome.jsx'
 import { Transactions } from './components/Dashboard/pages/Transactions.jsx'
 import Categories from './components/Dashboard/pages/Categories.jsx'
 import { RecurringBills } from './components/Dashboard/pages/RecuringBills.jsx'
 import { Reports } from './components/Dashboard/pages/Reports.jsx'
+>>>>>>> frontend-dashboard
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -25,6 +37,7 @@ const router = createBrowserRouter(
         <Route path='signup' element={<Signup/>}/>
         <Route path='reset-password' element={<ResetPassword/>}/>
         <Route path='verify-email' element={<VerifyEmail/>} />
+        <Route path='update-password/:id' element={<UpdatePassword/>}/>
       </Route>
 
       <Route path='/dashboard' element={<DashboardLayout/>} >
@@ -39,9 +52,16 @@ const router = createBrowserRouter(
 )
 
 
+//Am
+const store = configureStore({
+  reducer: rootReducer,
+})
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-      <RouterProvider router={router}/>
+      <Provider store={store}>
+        <Toaster/>
+        <RouterProvider router={router}/>
+      </Provider>
     </StrictMode>
 )
