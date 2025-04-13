@@ -111,15 +111,18 @@ export const Signup = () => {
             Track, manage, and visualize your spending beautifully.
           </p>
 
-          {/* Sign up with Google */}
-          <button className="w-full flex items-center justify-center gap-2 py-3 px-5 bg-white text-black rounded-lg font-semibold shadow hover:scale-[1.02] transition mb-5">
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google Icon"
-              className="w-5 h-5"
-            />
-            Sign up with Google
-          </button>
+          <button
+  onClick={() => window.location.href = "http://localhost:8000/auth/google"}
+  className="w-full flex items-center justify-center gap-2 py-3 px-5 bg-white text-black rounded-lg font-semibold shadow hover:scale-[1.02] transition mb-5"
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google Icon"
+    className="w-5 h-5"
+  />
+  Sign up with Google
+</button>
+
 
           {/* Role Tabs */}
           {/* <div className="flex gap-4 mb-5">

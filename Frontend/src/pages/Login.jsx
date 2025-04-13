@@ -88,10 +88,13 @@ export const Login =()=> {
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 border py-3 rounded-xl hover:bg-gray-100">
-            <FcGoogle className="text-xl" />
-            Log in with Google
-          </button>
+          <button
+  className="w-full flex items-center justify-center gap-2 border py-3 rounded-xl hover:bg-gray-100"
+  onClick={() => window.location.href = "http://localhost:8000/auth/google"}
+>
+  <FcGoogle className="text-xl" />
+  Log in with Google
+</button>
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Don’t have an account? <span className="text-black font-semibold cursor-pointer hover:underline">Sign Up</span>

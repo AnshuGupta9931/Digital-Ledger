@@ -3,8 +3,11 @@ import connectDB from "./db/index.js";
 import dotenv from "dotenv"
 import express from "express"
 import cors from "cors"
-
+import session from "express-session"
 import userRoutes from "./routes/User.js"
+import passport from "passport";
+import "./middlewares/passport.js"
+import googleAuthRoutes from "./routes/googleAuth.js";
 
 const app = express();
 
@@ -38,3 +41,18 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server Started Successfully at ${PORT}`)
 })
+
+app.use(
+    session({
+      secret: "your-session-secret",
+      resave: false,
+      saveUninitialized: true,
+    })
+  );
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  // Mount Google OAuth route
+  app.use("/auth", googleAuthRoutes);
+  
