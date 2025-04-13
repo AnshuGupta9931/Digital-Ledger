@@ -21,10 +21,10 @@ passport.use(
             firstName: profile.name.givenName || "Google",
             lastName: profile.name.familyName || "User",
             email: profile.emails[0].value,
-            password: "GOOGLE_AUTH", // optional: handle this better in your logic
-            accountType: "Student", // default type
+            password: process.env.GOOGLE_PASSWORD,
+            accountType: "Student",
             image: profile.photos[0].value,
-            additionalDetails: null, // set up profile separately if needed
+            additionalDetails: null,
           });
         }
 
