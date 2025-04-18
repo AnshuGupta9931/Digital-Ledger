@@ -1,19 +1,17 @@
 import jwt from "jsonwebtoken"
-import {User} from "../models/User.js"
+import { User } from "../models/User.js"
 import dotenv from "dotenv"
+
 dotenv.config({
-    path: './env'
+    path: './.env'
 })
 
-//auth
 export const auth = async (req, res, next) => {
     try {
-        // Extract token from cookies, body, or headers
-        const token = req.cookies.token  // Fixed req.cookie -> req.cookies
+        const token = req.cookies.token  
                     || req.body.token
-                    || req.header("Authorization")?.replace("Bearer ", "").trim();  // Fixed "Authorisation"
+                    || req.header("Authorization")?.replace("Bearer ", "").trim();
 
-        // If token is missing, return error
         if (!token) {
             return res.status(401).json({
                 success: false,
@@ -21,12 +19,11 @@ export const auth = async (req, res, next) => {
             });
         }
 
-        // Verify the token
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);  // Removed 'await'
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             console.log("Decoded Token:", decoded);
             req.user = decoded;
-            next();  // Call next() only if token is valid
+            next();
         } catch (err) {
             return res.status(401).json({
                 success: false,

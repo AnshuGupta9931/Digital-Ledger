@@ -1,4 +1,3 @@
-//Model 1
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -22,13 +21,18 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: true,
+        required: false, // ✅ Optional for Google users
+    },
+
+    googleId: {
+        type: String, // ✅ New field for Google OAuth
     },
 
     accountType: {
         type: String,
         enum: ["Admin", "Student"],
         required: true,
+        default: "Student",
     },
 
     active: {
@@ -43,13 +47,13 @@ const userSchema = new mongoose.Schema({
 
     additionalDetails: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: "Profile",
+        required: false, // ✅ Optional for Google users
     },
  
     image: {
         type: String,
-        required: true,
+        required: false, // ✅ Google user might come with a photo
     },
 
     token: {
@@ -60,7 +64,54 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
 
-}, { timestamps: true }
-);
+    theme: {
+        type: String,
+        enum: ["dark", "light"],
+        default: "light",
+    },
+
+    currency: {
+        type: String,
+        default: "INR",
+    },
+
+    notification: {
+        email: { type: Boolean, default: true },
+        push: { type: Boolean, default: false },
+    },
+
+    savings: {
+        type: Number,
+        default: 0,
+    },
+
+    friend: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+
+    friendRequest: [
+        {
+            from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            status: {
+                type: String,
+                enum: ["pending", "accepted", "rejected"],
+                default: "pending",
+            },
+        },
+    ],
+
+    groups: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Group",
+        },
+    ],
+}, { timestamps: true });
+
+userSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
+    next();
+});
 
 export const User = mongoose.model("User", userSchema);

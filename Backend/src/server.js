@@ -3,38 +3,56 @@ import connectDB from "./db/index.js";
 import dotenv from "dotenv"
 import express from "express"
 import cors from "cors"
+import session from "express-session"
+import userRoutes from "./routes/User.js"
+import passport from "passport";
+import "./middlewares/passport.js"
+import googleAuthRoutes from "./routes/googleAuth.js";
 
-import userRoutes from "./routes/User.js";
-
-//const express = require("express");
 const app = express();
+
 dotenv.config({
-    path: './env'
+    path: './.env'
 })
 
-//Db connection call
+//DB Connection
 connectDB()
 
-//Middleware 
+//Middlewares
 app.use(express.json());
-//app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: "http://localhost:5173", // frontend URL
-    credentials: true // if you're using cookies or auth headers
-  }));
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}));
 
 //load config from env file
 const PORT = process.env.PORT || 7000;
 
-//mount the API Routes
+//Routes
 app.use("/api/v1/auth", userRoutes);
 
-//start server
-app.listen(PORT, () => {
-    console.log(`Server Started Successfuly at, ${PORT}`);
+//Default Route
+app.get("/", (req, res) => {
+    res.send(`<h1>This is Homepage by Anshu</h1>`)
 })
 
-//default route
-app.get("/", (req, res) => {
-    res.send(`<h1> This is HOMEPAGE Aman poddar</h1>`);
+//Start Server
+app.listen(PORT, () => {
+    console.log(`Server Started Successfully at ${PORT}`)
 })
+
+app.use(
+    session({
+      secret: "your-session-secret",
+      resave: false,
+      saveUninitialized: true,
+    })
+  );
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  // Mount Google OAuth route
+  app.use("/auth", googleAuthRoutes);
+  

@@ -199,6 +199,9 @@ export const login = async (req, res) => {
         }
         //user exists or not
         const user = await User.findOne({email}).populate("additionalDetails");
+        if (user.password === "GOOGLE_AUTH") {
+            return res.status(300).json({ message: "Use Google login for this email." });
+          }
         if(!user)
         {
             return res.status(401).json({
