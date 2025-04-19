@@ -36,6 +36,8 @@ import { DebtAndSettlements } from './components/Dashboard/pages/DebtAndSettleme
 import { Settings } from './components/Dashboard/pages/Settings.jsx'
 import { Savings } from './components/Dashboard/pages/Savings.jsx'
 import { Groups } from './components/Dashboard/pages/Group.jsx'
+import PaymentSuccess from './components/Dashboard/pages/PaymentSuccess.jsx'
+import PaymentCancelled from './components/Dashboard/pages/PaymentCancelled.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,6 +63,10 @@ const router = createBrowserRouter(
         <Route path='groups' element={<Groups />} />
         <Route path='settings' element={<Settings />} />
       </Route>
+
+      <Route path='/success' element={<PaymentSuccess/>}/>
+      <Route path='/success' element={<PaymentCancelled/>}/>
+
     </>
   )
 )
