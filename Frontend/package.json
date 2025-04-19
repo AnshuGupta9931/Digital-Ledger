@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
+    "@stripe/stripe-js": "^7.1.0",
     "@tailwindcss/vite": "^4.1.2",
     "axios": "^1.8.4",
     "concurrently": "^9.1.2",
@@ -34,9 +35,10 @@
     "react-scripts": "^5.0.1",
     "react-super-responsive-table": "^6.0.2",
     "react-type-animation": "^3.2.0",
-    "redux-toolkit": "^1.1.2",
     "rechart": "^0.0.1",
     "recharts": "^2.15.2",
+    "redux-toolkit": "^1.1.2",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.17",
     "swiper": "^11.2.6",
     "web-vitals": "^4.2.4"
