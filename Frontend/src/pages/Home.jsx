@@ -19,7 +19,7 @@ export const Home = () => {
           </p>
         </div>
 
-        {/* Sections Overview */}
+        {/* Section Overview */}
         <div className="space-y-6">
           <Section
             title="Dashboard"

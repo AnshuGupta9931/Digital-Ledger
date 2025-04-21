@@ -54,10 +54,10 @@ export const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 p-6">
-      <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden max-w-5xl w-full">
+      <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden max-w-6xl w-full">
 
         {/* Left Side Image */}
-        <div className="md:w-1/2 hidden md:block">
+        <div className="md:w-[60%] hidden md:block">
           <img
             src={signuppage}
             alt="Signup Illustration"
@@ -66,7 +66,7 @@ export const Signup = () => {
         </div>
 
         {/* Signup Form Side */}
-        <div className="w-full md:w-1/2 flex flex-col p-10">
+        <div className="w-full md:w-[40%] flex flex-col p-10">
           {/* Logo */}
           <div className="flex items-center space-x-2 mb-10">
             <div className="w-6 h-6 bg-black rounded-full" />
