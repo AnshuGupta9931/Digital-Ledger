@@ -16,6 +16,31 @@ const mockDebts = [
 ];
 
 export const DebtAndSettlements = () => {
+  const handleSettleUp = async (debt) => {
+    try {
+      const response = await fetch("http://localhost:8000/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          amount: debt.amount,
+          name: debt.name,
+          reason: debt.reason,
+        }),
+      });
+  
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Payment failed", error);
+      alert("Error starting payment.");
+    }
+  };
+  
+
+
   return (
     <div className="bg-[#fefcf8] p-10 text-gray-800 min-h-screen">
       <div className="w-full bg-gray-200 rounded-xl shadow-lg overflow-hidden flex flex-col">
@@ -39,9 +64,12 @@ export const DebtAndSettlements = () => {
                   <p className="text-xl font-bold text-red-600">${debt.amount.toFixed(2)}</p>
                 </div>
               </div>
-              <button className="mt-3 bg-gray-300 px-4 py-2 rounded-md text-blue-900 font-semibold text-sm">
-                Settle Up
-              </button>
+              <button
+  onClick={() => handleSettleUp(debt)}
+  className="mt-3 bg-gray-300 px-4 py-2 rounded-md text-blue-900 font-semibold text-sm"
+>
+  Settle Up
+</button>
             </div>
           ))}
         </div>
