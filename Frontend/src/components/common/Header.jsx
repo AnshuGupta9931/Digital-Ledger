@@ -50,7 +50,34 @@ export default function Header() {
                   Home
                 </NavLink>
               </li>
-              {/* Add more links here if needed */}
+              <li>
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) =>
+                    `block py-2 pr-4 pl-3 transition duration-200 rounded ${
+                      isActive
+                        ? "text-blue-600"
+                        : "text-gray-700 hover:text-blue-600"
+                    }`
+                  }
+                >
+                  About Us
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/contact"
+                  className={({ isActive }) =>
+                    `block py-2 pr-4 pl-3 transition duration-200 rounded ${
+                      isActive
+                        ? "text-blue-600"
+                        : "text-gray-700 hover:text-blue-600"
+                    }`
+                  }
+                >
+                  Contact Us
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>

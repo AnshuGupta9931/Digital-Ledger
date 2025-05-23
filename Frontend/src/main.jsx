@@ -36,6 +36,8 @@ import { DebtAndSettlements } from './components/Dashboard/pages/DebtAndSettleme
 import { Settings } from './components/Dashboard/pages/Settings.jsx'
 import { Savings } from './components/Dashboard/pages/Savings.jsx'
 import { Groups } from './components/Dashboard/pages/Group.jsx'
+import AboutUs from './pages/AboutUs.jsx'
+import ContactUs from './pages/ContactUs.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +49,8 @@ const router = createBrowserRouter(
         <Route path='reset-password' element={<ResetPassword />} />
         <Route path='verify-email' element={<VerifyEmail />} />
         <Route path='update-password/:id' element={<UpdatePassword />} />
+        <Route path="/about" element={<AboutUs/>} />
+        <Route path="/contact" element={<ContactUs/>} />
       </Route>
 
       <Route path='/dashboard' element={<DashboardLayout />} >
