@@ -114,45 +114,62 @@ export function signUp(
   
 
 
-export function login(email, password, navigate){
-    return async(dispatch) => {
-        const toastId = toast.loading("Loading...");
-        dispatch(setLoading(true));
-
-        try{
-            const response = await apiConnector("POST", LOGIN_API, {
-                email,
-                password,
-            })
-
-            console.log("LOGIN API RESPONSE.....", response);
-            if (!response.data.success) {
-                throw new Error(response.data.message)
-              }
-        
-            toast.success("Login Successful")
-            dispatch(setToken(response.data.token))
-            const userImage = response.data?.user?.image
-            ? response.data.user.image
-            : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user.firstName} ${response.data.user.lastName}`
-            dispatch(setUser({ ...response.data.user, image: userImage }))
-            
-            localStorage.setItem("token", JSON.stringify(response.data.token))
-            localStorage.setItem("user", JSON.stringify(response.data.user))
-            navigate("/dashboard")
+  export function login(email, password, navigate) {
+    return async (dispatch) => {
+      const toastId = toast.loading("Logging in...");
+      dispatch(setLoading(true));
+  
+      try {
+        const response = await apiConnector("POST", LOGIN_API, {
+          email,
+          password,
+        });
+  
+        console.log("LOGIN API RESPONSE.....", response);
+  
+        if (!response.data.success) {
+          throw new Error(response.data.message);
         }
-        catch(error){
-            console.log("LOGIN API ERROR............", error)
-            const errorMessage =
-            error.response?.data?.message || error.message || "Login Failed";
-    
+  
+        toast.success("Login Successful");
+  
+        const serverUser = response.data.user;
+  
+        // Safely construct user object
+        const userImage = serverUser?.image
+          ? serverUser.image
+          : `https://api.dicebear.com/5.x/initials/svg?seed=${serverUser.firstName} ${serverUser.lastName}`;
+  
+        const flattenedUser = {
+          _id: serverUser._id,
+          email: serverUser.email,
+          accountType: serverUser.accountType,
+          firstName: serverUser.firstName || "",
+          lastName: serverUser.lastName || "",
+          image: userImage,
+        };
+  
+        // Save to Redux
+        dispatch(setToken(response.data.token));
+        dispatch(setUser(flattenedUser));
+  
+        // Save to localStorage
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("user", JSON.stringify(flattenedUser));
+  
+        navigate("/dashboard");
+      } catch (error) {
+        console.log("LOGIN API ERROR............", error);
+        const errorMessage =
+          error.response?.data?.message || error.message || "Login Failed";
         toast.error(errorMessage);
-        }
-        dispatch(setLoading(false))
-        toast.dismiss(toastId)
-    }
-}
-
+      }
+  
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    };
+  }
+  
 export function logout(navigate) {
     return (dispatch) => {
       dispatch(setToken(null))

@@ -164,7 +164,6 @@ export const signup = async (req, res) => {
             additionalDetails: profileDetails,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
         });
-
         //return res
         return res.status(200).json({
             success: true,
@@ -213,7 +212,9 @@ export const login = async (req, res) => {
         //generate JWT, after password matching
         if(await bcrypt.compare(password, user.password))
         {
+
             const payload = {
+                firstName : user.firstName,
                 email: user.email,
                 id: user._id,
                 accountType: user.accountType,
@@ -222,8 +223,8 @@ export const login = async (req, res) => {
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: "2h",
             });
-            user.token = token;
-            user.password = undefined;
+            user = user.toObject();
+            delete user.password;
 
             //create cookie and send response
             const options = {
