@@ -10,11 +10,11 @@ import {createTransaction, getAllTransactions, filterTransactions, getPaginatedT
 // ********************************************************************************************************
 router.post("/createTransaction", auth, createTransaction);
 router.get("/showAllTransactions", auth, getAllTransactions);
-router.get("/filterTransaction", auth, filterTransactions);
-router.get("/getPage", auth, getPaginatedTransactions);
-router.get("/getMonthSummary", auth, getMonthlySummary);
+router.post("/filterTransaction", auth, filterTransactions);
+router.post("/getPage", auth, getPaginatedTransactions);
+router.post("/getMonthSummary", auth, getMonthlySummary);
 router.put("/updateTransaction", auth, updateTransaction);
-router.delete("/deleteTransaction", auth, deleteTransaction);
+router.post("/deleteTransaction", auth, deleteTransaction);
 
 
 // router.get("/instructorDashboard", auth, isInstructor, instructorDashboard);
