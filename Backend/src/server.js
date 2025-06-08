@@ -8,11 +8,11 @@ import passport from "passport";
 import userRoutes from "./routes/User.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import "./middlewares/passport.js";
-
+import recurringBillsRoutes from "./routes/RecurringBills.js"
 // 🔥 New imports
 import http from "http";
 import { Server } from "socket.io";
-
+import cookieParser from "cookie-parser";
 dotenv.config({ path: "./.env" });
 
 // Express App Setup
@@ -28,7 +28,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(cookieParser());
 // Session and Passport setup
 app.use(
   session({
@@ -43,7 +43,7 @@ app.use(passport.session());
 // Routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/auth", googleAuthRoutes);
-
+app.use("/api/v1/bills",recurringBillsRoutes);
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
 });
