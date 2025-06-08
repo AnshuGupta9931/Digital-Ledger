@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/operations/authAPI.jsx";
-import loginbg from "../assets/images/loginbg.png"; // ✅ Imported background image
+import loginbg from "../assets/images/loginbg.png"; 
 
 export const Login = () => {
   const navigate = useNavigate();

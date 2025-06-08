@@ -5,7 +5,7 @@ import { apiConnector } from "../apiconnector.jsx"
 import { endpoints } from "../apis.jsx"
 import { setUser } from "../../slices/profileSlice"
 import { useNavigate } from "react-router-dom"
-
+import { useDispatch,useSelector } from "react-redux"
 const {
     SENDOTP_API,
     SIGNUP_API,

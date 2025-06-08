@@ -23,7 +23,7 @@ import { Signup } from './pages/Signup.jsx'
 import { ResetPassword } from './pages/ResetPassword.jsx'
 import { VerifyEmail } from './pages/VerifyEmail.jsx'
 import { UpdatePassword } from './pages/UpdatePassword.jsx'
-
+import { OAuthSuccess } from './services/operations/OAuthSuccess.jsx'
 // Dashboard components and pages
 import { DashboardHeader, DashboardLayout, Sidebar } from "./components/Dashboard";
 import { DashboardHome } from './components/Dashboard/pages/DashboardHome.jsx'
@@ -52,6 +52,7 @@ const router = createBrowserRouter(
         <Route path='verify-email' element={<VerifyEmail />} />
         <Route path='update-password/:id' element={<UpdatePassword />} />
         <Route path="/about" element={<AboutUs/>} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route path="/contact" element={<ContactUs/>} />
       </Route>
 
