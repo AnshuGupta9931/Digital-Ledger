@@ -24,7 +24,10 @@ router.get(
     );
 
     // Optional: Redirect with token in query
-    res.redirect(`http://localhost:5173/dashboard?token=${token}`);
+    res.redirect(
+      `http://localhost:5173/oauth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`
+    );
+    
   }
 );
 
