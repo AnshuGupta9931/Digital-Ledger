@@ -1,13 +1,19 @@
 import mongoose from "mongoose";
 import connectDB from "./db/index.js";
 import dotenv from "dotenv";
-import express from "express";
+import express, { application } from "express";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import userRoutes from "./routes/User.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import "./middlewares/passport.js";
+import transactionRoutes from "./routes/Transaction.js"
+import categoryRoutes from "./routes/Category.js"
+import friendRoutes from "./routes/FriendRequest.js"
+import cookieParser from "cookie-parser";
+
+
 
 // 🔥 New imports
 import http from "http";
@@ -28,6 +34,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 
 // Session and Passport setup
 app.use(
@@ -43,6 +50,9 @@ app.use(passport.session());
 // Routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/auth", googleAuthRoutes);
+app.use("/api/v1/transaction", transactionRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/friends", friendRoutes);
 
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
