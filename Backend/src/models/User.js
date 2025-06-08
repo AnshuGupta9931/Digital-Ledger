@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: false, // ✅ Optional for Google users
+        required: false, // Optional for Google users
     },
 
     googleId: {
-        type: String, // ✅ New field for Google OAuth
+        type: String, // For Google OAuth users
     },
 
     accountType: {
@@ -48,12 +48,12 @@ const userSchema = new mongoose.Schema({
     additionalDetails: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Profile",
-        required: false, // ✅ Optional for Google users
+        required: false, // Optional for Google users
     },
  
     image: {
         type: String,
-        required: false, // ✅ Google user might come with a photo
+        required: false, // Google user might come with a photo
     },
 
     token: {
@@ -85,20 +85,11 @@ const userSchema = new mongoose.Schema({
         default: 0,
     },
 
-    friends: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    },
-
-    friendRequest: [
+    friends: [
         {
-            from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            status: {
-                type: String,
-                enum: ["pending", "accepted", "rejected"],
-                default: "pending",
-            },
-        },
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }
     ],
 
     groups: [
