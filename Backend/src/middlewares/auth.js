@@ -8,10 +8,11 @@ dotenv.config({
 
 export const auth = async (req, res, next) => {
     try {
-        const token = req.cookies.token  
-                    || req.body.token
-                    || req.header("Authorization")?.replace("Bearer ", "").trim();
-
+        const token =
+        req.header("Authorization")?.replace("Bearer ", "").trim() || 
+  req.query?.token || 
+  req.body?.token || 
+  req.cookies?.token;
         if (!token) {
             return res.status(401).json({
                 success: false,

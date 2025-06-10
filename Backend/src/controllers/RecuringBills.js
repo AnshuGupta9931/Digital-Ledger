@@ -6,7 +6,7 @@ export const createBill = async (req, res) => {
   
     try {
       const newBill = new RecuringBills({
-        user: req.user._id,
+        user: req.user.id,
         title,
         amount,
         dueDate,
@@ -24,20 +24,37 @@ export const createBill = async (req, res) => {
 // Update an existing bill
 export const updateBill = async (req, res) => {
   try {
-    const { id, ...updateData } = req.body;
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "Bill ID is required" });
+    }
+
+    const allowedFields = ['title', 'amount', 'dueDate', 'frequency'];
+    const updateData = {};
+
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        updateData[key] = req.body[key];
+      }
+    }
 
     const bill = await RecuringBills.findOneAndUpdate(
-      { _id: id, user: req.user._id },
+      { _id: id, user: req.user.id },
       updateData,
       { new: true }
     );
 
-    if (!bill) return res.status(404).json({ message: "Bill not found" });
-    res.status(200).json(bill);
+    if (!bill) {
+      return res.status(404).json({ message: "Bill not found" });
+    }
+
+    res.status(200).json({ message: "Bill updated successfully", bill });
   } catch (error) {
     res.status(400).json({ message: "Failed to update bill", error });
   }
 };
+
 
   
 
@@ -46,7 +63,7 @@ export const deleteBill = async (req, res) => {
   try {
     const { id } = req.body; // Take the id from the body instead of params
 
-    const bill = await RecuringBills.findOneAndDelete({ _id: id, user: req.user._id });
+    const bill = await RecuringBills.findOneAndDelete({ _id: id, user: req.user.id });
     if (!bill) return res.status(404).json({ message: "Bill not found" });
 
     res.status(200).json({ message: "Bill deleted successfully" });
@@ -59,7 +76,7 @@ export const deleteBill = async (req, res) => {
 // Get all bills for a specific user
 export const getBills = async (req, res) => {
     try {
-      const bills = await RecuringBills.find({ user: req.user._id });
+      const bills = await RecuringBills.find({ user: req.user.id });
       res.status(200).json(bills);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch bills", error });
@@ -72,7 +89,7 @@ export const getBillById = async (req, res) => {
   try {
     const { id } = req.body; // Take the ID from the body instead of params
 
-    const bill = await RecuringBills.findOne({ _id: id, user: req.user._id });
+    const bill = await RecuringBills.findOne({ _id: id, user: req.user.id });
     if (!bill) return res.status(404).json({ message: "Bill not found" });
 
     res.status(200).json(bill);

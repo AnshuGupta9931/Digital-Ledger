@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/profileSlice";
+import { setToken } from "../../slices/authSlice";
 
 export const OAuthSuccess = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export const OAuthSuccess = () => {
 
     if (token) {
       localStorage.setItem("token", token);
-
+       dispatch(setToken(token));
       if (userString) {
         try {
           const userData = JSON.parse(decodeURIComponent(userString));

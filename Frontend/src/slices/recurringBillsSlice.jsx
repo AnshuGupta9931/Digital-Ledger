@@ -1,124 +1,82 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-const API = '/api/v1/bills'; 
-
-// Async Thunks
-
-export const fetchAllBills = createAsyncThunk(
-  'recurringBills/fetchAll',
-  async (_, thunkAPI) => {
-    try {
-      const res = await axios.get(`${API}/showAllBills`,{
-        withCredentials:true,
-      });
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const createBill = createAsyncThunk(
-  'recurringBills/create',
-  async (billData, thunkAPI) => {
-    try {
-      const res = await axios.post(`${API}/createBill`, billData,{
-        withCredentials:true,
-      });
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const updateBill = createAsyncThunk(
-  'recurringBills/update',
-  async (billData, thunkAPI) => {
-    try {
-      const res = await axios.put(`${API}/updateBill`, billData,{
-        withCredentials : true,
-      });
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const deleteBill = createAsyncThunk(
-  'recurringBills/delete',
-  async (id, thunkAPI) => {
-    try {
-      const res = await axios.delete(`${API}/deleteBill`, { data: { id } },{
-        withCredentials: true,
-      });
-      return id; // return id so we can remove from local state
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const getBillById = createAsyncThunk(
-  'recurringBills/getById',
-  async (id, thunkAPI) => {
-    try {
-      const res = await axios.get(`${API}/getBillid`, { data: { id } },{
-        withCredentials : true
-      });
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-// Slice
+import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-hot-toast";
 
 const recurringBillsSlice = createSlice({
-  name: 'recurringBills',
+  name: "recurringBills",
   initialState: {
     bills: [],
     currentBill: null,
     loading: false,
     error: null,
   },
-  reducers: {
-    clearCurrentBill: (state) => {
-      state.currentBill = null;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchAllBills.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchAllBills.fulfilled, (state, action) => {
-        state.loading = false;
-        state.bills = action.payload.bills || [];
-      })
-      .addCase(fetchAllBills.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload?.message;
-      })
 
-      .addCase(createBill.fulfilled, (state, action) => {
-        state.bills.push(action.payload);
-      })
-      .addCase(updateBill.fulfilled, (state, action) => {
-        const idx = state.bills.findIndex((b) => b._id === action.payload._id);
-        if (idx !== -1) state.bills[idx] = action.payload;
-      })
-      .addCase(deleteBill.fulfilled, (state, action) => {
-        state.bills = state.bills.filter((b) => b._id !== action.payload);
-      })
-      .addCase(getBillById.fulfilled, (state, action) => {
-        state.currentBill = action.payload;
-      });
+  reducers: {
+    setBills: (state, action) => {
+      state.bills = action.payload;
+    },
+
+    setCurrentBill: (state, action) => {
+      state.currentBill = action.payload;
+    },
+
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+
+    resetBillState: (state) => {
+      state.bills = [];
+      state.currentBill = null;
+      state.loading = false;
+      state.error = null;
+    },
+
+    addBill: (state, action) => {
+      const newBill = action.payload;
+      const exists = state.bills.some(
+        (bill) =>
+          bill.name.toLowerCase() === newBill.name.toLowerCase() &&
+          bill.amount === newBill.amount
+      );
+
+      if (!exists) {
+        state.bills.push(newBill);
+        console.log("New Bill was : " ,newBill);
+        toast.success(`Bill ${newBill.name} added`);
+      } else {
+        toast.error(`Bill ${newBill.name} already exists`);
+      }
+    },
+
+    updateBill: (state, action) => {
+      const updatedBill = action.payload;
+      const index = state.bills.findIndex((b) => b._id === updatedBill._id);
+      if (index !== -1) {
+        state.bills[index] = updatedBill;
+        toast.success(`Bill "${updatedBill.name}" updated`);
+      }
+    },
+
+    deleteBill: (state, action) => {
+      const idToDelete = action.payload;
+      state.bills = state.bills.filter((bill) => bill._id !== idToDelete);
+      toast.success("Bill deleted");
+    },
   },
 });
 
-export const { clearCurrentBill } = recurringBillsSlice.actions;
+export const {
+  setBills,
+  setCurrentBill,
+  setLoading,
+  setError,
+  resetBillState,
+  addBill,
+  updateBill,
+  deleteBill,
+} = recurringBillsSlice.actions;
+
 export default recurringBillsSlice.reducer;

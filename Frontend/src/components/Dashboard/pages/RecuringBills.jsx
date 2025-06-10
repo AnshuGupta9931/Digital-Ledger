@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllBills, createBill } from "../../../slices/recurringBillsSlice";
+import {
+  fetchRecurringBills,
+  createRecurringBill,
+  deleteRecurringBill,
+} from "../../../services/operations/recurringBillsAPI";
 
 export const RecurringBills = () => {
   const dispatch = useDispatch();
@@ -14,21 +18,48 @@ export const RecurringBills = () => {
     frequency: "monthly",
   });
 
+  const token = useSelector((state) => state.auth.token);
+  if(!token) console.log("Token not present in google auth");
   useEffect(() => {
-    dispatch(fetchAllBills());
-  }, [dispatch]);
+    if (token) {
+      dispatch(fetchRecurringBills(token));
+    }
+  }, [dispatch, token]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createBill(formData)).then(() => {
-      dispatch(fetchAllBills()); // refresh list after adding
+    if (!token) return;
+
+    const newBill = await createRecurringBill({ ...formData }, token);
+
+    if (newBill) {
+      dispatch(fetchRecurringBills(token)); // Sync with backend
       setShowForm(false);
-      setFormData({ title: "", amount: "", dueDate: "", frequency: "monthly" });
-    });
+      setFormData({
+        title: "",
+        amount: "",
+        dueDate: "",
+        frequency: "monthly",
+      });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!token) return;
+
+    const confirm = window.confirm("Are you sure you want to delete this bill?");
+    if (!confirm) return;
+
+    try {
+      await deleteRecurringBill(id, token);
+      dispatch(fetchRecurringBills(token)); // Refresh list
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   return (
@@ -83,45 +114,44 @@ export const RecurringBills = () => {
             <option value="weekly">Weekly</option>
             <option value="yearly">Yearly</option>
           </select>
+
           <button
             type="submit"
-            className="col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            className="col-span-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
           >
-            Submit
+            Create Bill
           </button>
         </form>
       )}
 
-      <div className="bg-white rounded-2xl shadow transition-all p-4 overflow-x-auto">
-        {loading ? (
-          <p className="text-center py-6 text-blue-600 font-semibold">Loading bills...</p>
-        ) : error ? (
-          <p className="text-center py-6 text-red-500 font-medium">{error}</p>
-        ) : bills.length === 0 ? (
-          <p className="text-center py-6 text-gray-500">No bills found.</p>
-        ) : (
-          <table className="w-full table-auto text-left">
-            <thead>
-              <tr className="border-b text-sm text-gray-600 uppercase">
-                <th className="px-4 py-2">Bill</th>
-                <th className="px-4 py-2">Amount</th>
-                <th className="px-4 py-2">Due Date</th>
-                <th className="px-4 py-2">Frequency</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bills.map((bill) => (
-                <tr key={bill._id} className="border-b last:border-none text-md">
-                  <td className="px-4 py-3">{bill.title}</td>
-                  <td className="px-4 py-3">₹{Number(bill.amount).toFixed(2)}</td>
-                  <td className="px-4 py-3">{new Date(bill.dueDate).toDateString()}</td>
-                  <td className="px-4 py-3 capitalize">{bill.frequency}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {bills.map((bill) => (
+            <div
+              key={bill._id}
+              className="bg-white p-4 rounded-xl shadow-md border border-gray-200 relative"
+            >
+              <h3 className="text-lg font-semibold">{bill.title}</h3>
+              <p>Amount: ₹{bill.amount}</p>
+              <p>Due: {new Date(bill.dueDate).toLocaleDateString()}</p>
+              <p>Frequency: {bill.frequency}</p>
+
+              <button
+                onClick={() => handleDelete(bill._id)}
+                className="mt-3 text-sm text-red-600 hover:underline"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
+
+export default RecurringBills;
