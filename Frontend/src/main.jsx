@@ -33,7 +33,7 @@ import { RecurringBills } from './components/Dashboard/pages/RecuringBills.jsx'
 import { Reports } from './components/Dashboard/pages/Reports.jsx'
 import { Friends } from './components/Dashboard/pages/Friends.jsx'
 import { DebtAndSettlements } from './components/Dashboard/pages/DebtAndSettlements.jsx'
-import { Settings } from './components/Dashboard/pages/Settings.jsx'
+// import { Settings } from './components/Dashboard/pages/Settings.jsx'
 import { Savings } from './components/Dashboard/pages/Savings.jsx'
 import { Groups } from './components/Dashboard/pages/Group.jsx'
 import AboutUs from './pages/AboutUs.jsx'
@@ -63,7 +63,7 @@ const router = createBrowserRouter(
         <Route path='debt-settlements' element={<DebtAndSettlements />} />
         <Route path='savings' element={<Savings />} />
         <Route path='groups' element={<Groups />} />
-        <Route path='settings' element={<Settings />} />
+        {/* <Route path='settings' element={<Settings />} /> */}
       </Route>
     </>
   )
