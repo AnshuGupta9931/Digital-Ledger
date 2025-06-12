@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const DashboardHeader = ({ toggleSidebar }) => {
   const location = useLocation();
@@ -38,8 +39,14 @@ const DashboardHeader = ({ toggleSidebar }) => {
         {isProfileMenuOpen && (
           <div className="absolute top-12 right-0 mt-2 bg-white shadow-md rounded-md w-48 py-2 z-50">
             <ul>
-              <li className="px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer">Profile</li>
-              <li className="px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer">Settings</li>
+              <li>
+                <Link
+                  to="/dashboard/profile"
+                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >
+                  My Profile
+                </Link>
+              </li>
               <li className="px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer">Logout</li>
             </ul>
           </div>

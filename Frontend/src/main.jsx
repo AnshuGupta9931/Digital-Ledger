@@ -38,6 +38,7 @@ import { Savings } from './components/Dashboard/pages/Savings.jsx'
 import { Groups } from './components/Dashboard/pages/Group.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import ContactUs from './pages/ContactUs.jsx'
+import Profile from './pages/Profile.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -64,6 +65,7 @@ const router = createBrowserRouter(
         <Route path='savings' element={<Savings />} />
         <Route path='groups' element={<Groups />} />
         {/* <Route path='settings' element={<Settings />} /> */}
+        <Route path='profile' element={<Profile />} />
       </Route>
     </>
   )
