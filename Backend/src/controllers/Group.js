@@ -10,15 +10,20 @@ export const createGroup = async (req, res) => {
     const newGroup = new Group({
       name,
       members,
-      createdBy
+      createdBy,
     });
 
     await newGroup.save();
+
+    // ✅ Populate member names/emails before sending
+    await newGroup.populate("members", "firstName lastName email");
+
     res.status(201).json({ message: "Group created successfully", group: newGroup });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create group", details: error.message });
+    res.status(500).json({ error: "Failed to create group" });
   }
 };
+
 
 // Get all groups for the logged-in user
 export const getUserGroups = async (req, res) => {
@@ -28,8 +33,9 @@ export const getUserGroups = async (req, res) => {
     const groups = await Group.find({
       $or: [{ createdBy: userId }, { members: userId }]
     })
-    .populate("members", "name email")
-    .populate("createdBy", "name");
+    .populate("members", "firstName lastName email")
+    .populate("createdBy", "firstName lastName");
+
 
     res.status(200).json({ groups });
   } catch (error) {
@@ -43,8 +49,8 @@ export const getGroupById = async (req, res) => {
     const { id } = req.body;
 
     const group = await Group.findById(id)
-      .populate("members", "name email")
-      .populate("createdBy", "name");
+      .populate("members", "firstName lastName email")
+      .populate("createdBy", "firstName lastName");
 
     if (!group) return res.status(404).json({ message: "Group not found" });
 
@@ -54,19 +60,24 @@ export const getGroupById = async (req, res) => {
   }
 };
 
-
 // Update group (e.g. name or members)
 export const updateGroup = async (req, res) => {
   try {
     const { id, name, members } = req.body;
 
+    const validMembers = (members || []).filter((id) => id);
+
     const updatedGroup = await Group.findByIdAndUpdate(
       id,
-      { name, members },
+      { name, members: validMembers },
       { new: true }
-    );
+    )
+    .populate("members", "firstName lastName email")
+    .populate("createdBy", "firstName lastName");
+
 
     if (!updatedGroup) return res.status(404).json({ message: "Group not found" });
+    console.log("Group response:", updatedGroup);
 
     res.status(200).json({ message: "Group updated", group: updatedGroup });
   } catch (error) {
@@ -88,4 +99,3 @@ export const deleteGroup = async (req, res) => {
     res.status(500).json({ error: "Failed to delete group", details: error.message });
   }
 };
-
