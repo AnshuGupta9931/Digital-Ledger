@@ -11,6 +11,9 @@ import "./middlewares/passport.js";
 import transactionRoutes from "./routes/Transaction.js"
 import categoryRoutes from "./routes/Category.js"
 import friendRoutes from "./routes/FriendRequest.js"
+import debtRoutes from "./routes/Debt.js"
+import savingRoutes from "./routes/Savings.js"
+import groupRoutes from "./routes/Group.js"
 import cookieParser from "cookie-parser";
 
 
@@ -53,6 +56,9 @@ app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/transaction", transactionRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/friends", friendRoutes);
+app.use("/api/v1/debts", debtRoutes);
+app.use("/api/v1/savings", savingRoutes);
+app.use("/api/v1/group", groupRoutes);
 
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
