@@ -9,6 +9,7 @@ import userRoutes from "./routes/User.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import "./middlewares/passport.js";
 import recurringBillsRoutes from "./routes/RecurringBills.js"
+import updateProfileRoutes from "./routes/Profile.js"
 // 🔥 New imports
 import http from "http";
 import { Server } from "socket.io";
@@ -44,6 +45,7 @@ app.use(passport.session());
 app.use("/api/v1/auth", userRoutes);
 app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/bills",recurringBillsRoutes);
+app.use("/api/v1/profile",updateProfileRoutes);
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
 });
@@ -92,6 +94,7 @@ io.on("connection", (socket) => {
 // for payment gateway
 
 import Stripe from "stripe";
+import { updateProfile } from "./controllers/Profile.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 

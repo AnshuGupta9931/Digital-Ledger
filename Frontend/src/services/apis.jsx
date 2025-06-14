@@ -43,3 +43,8 @@ export const recurringBillsEndpoints = {
   DELETE_BILL_API: BASE_URL + "/bills/deleteBill",
   GET_BILL_BY_ID_API: BASE_URL + "/bills/getBillid",
 };
+   
+// Profile ENDPOINTS
+export const profileEndpoints = {
+  UPDATE_PROFILE_API : BASE_URL + "/profile/updateProfile",
+}

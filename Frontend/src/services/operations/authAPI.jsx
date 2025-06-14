@@ -151,7 +151,7 @@ export function signUp(
   
         // Save to Redux
         dispatch(setToken(response.data.token));
-        dispatch(setUser(flattenedUser));
+        dispatch(setUser(response.data.user));
   
         // Save to localStorage
         localStorage.setItem("token", JSON.stringify(response.data.token));

@@ -30,9 +30,9 @@ const links = [
   {
     name: 'groups', path : "/dashboard/groups", icon: <HiUserGroup />
   },
-  {
-    name: 'settings', path : "/dashboard/settings", icon: <FiSettings />
-  },
+  // {
+  //   name: 'settings', path : "/dashboard/settings", icon: <FiSettings />
+  // },
   
 ];
 
