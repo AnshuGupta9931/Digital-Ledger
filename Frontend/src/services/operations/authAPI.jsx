@@ -153,7 +153,7 @@ export function signUp(
   
         // Save to localStorage
         localStorage.setItem("token", JSON.stringify(response.data.token));
-        localStorage.setItem("user", JSON.stringify(flattenedUser));
+        localStorage.setItem("user", JSON.stringify(response.data.user));
   
         navigate("/dashboard");
       } catch (error) {

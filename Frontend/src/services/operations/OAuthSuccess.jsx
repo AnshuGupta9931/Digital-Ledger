@@ -15,7 +15,7 @@ export const OAuthSuccess = () => {
     const userString = query.get("user");
 
     if (token) {
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", JSON.stringify(token));
        dispatch(setToken(token));
       if (userString) {
         try {

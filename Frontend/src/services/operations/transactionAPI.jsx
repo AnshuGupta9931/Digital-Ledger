@@ -14,7 +14,6 @@ const {
   GET_MONTHLY_SUMMARY_API,
   GET_PAGINATED_TRANSACTIONS_API,
 } = transactionEndpoints;
-
 export function fetchAllTransactions() {
   return async (dispatch) => {
     const toastId = toast.loading("Fetching transactions...");
@@ -26,7 +25,7 @@ export function fetchAllTransactions() {
         GET_ALL_TRANSACTIONS_API,
         null,
         {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         }
       );
 
@@ -57,7 +56,7 @@ export function createTransaction(data) {
         CREATE_TRANSACTION_API,
         data,
         {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         }
       );
 
@@ -95,13 +94,14 @@ export function createTransaction(data) {
 
 export const deleteTransactionAPI = (id) => async (dispatch) => {
   const toastId = toast.loading("Deleting transaction...");
+  const t = JSON.parse(localStorage.getItem("token"));
   try {
     const response = await apiConnector(
-      "POST",
+      "DELETE",
       DELETE_TRANSACTION_API,
       { id },
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -110,7 +110,7 @@ export const deleteTransactionAPI = (id) => async (dispatch) => {
     }
 
     dispatch(removeTransaction(id));
-    dispatch(fetchCategories()); // refresh categories
+    dispatch(fetchCategories(t)); // refresh categories
 
     toast.success("Transaction deleted");
   } catch (err) {
@@ -123,14 +123,14 @@ export const deleteTransactionAPI = (id) => async (dispatch) => {
 
 export const updateTransactionAPI = (formData) => async (dispatch) => {
   const toastId = toast.loading("Updating transaction...");
-
+  const t = JSON.parse(localStorage.getItem("token"));
   try {
     const response = await apiConnector(
       "PUT", // or "POST" if your backend expects POST
       UPDATE_TRANSACTION_API,
       formData,
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -139,7 +139,7 @@ export const updateTransactionAPI = (formData) => async (dispatch) => {
     }
 
     dispatch(updateTransaction(response.data.transaction));
-    dispatch(fetchCategories()); // 🔄 Refresh category totals from backend
+    dispatch(fetchCategories(t)); // 🔄 Refresh category totals from backend
 
     toast.success("Transaction updated successfully");
   } catch (err) {
@@ -162,7 +162,14 @@ export const filterTransactionsAPI = (filters) => async (dispatch) => {
 
 export const getMonthlySummaryAPI = (filters) => async (dispatch) => {
   try {
-    const response = await apiConnector("POST", GET_MONTHLY_SUMMARY_API, filters);
+    const response = await apiConnector(
+      "POST",
+      GET_MONTHLY_SUMMARY_API,
+      filters,
+      {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+      }
+    );
     dispatch(setMonthlySummary(response.data.summary));
   } catch (error) {
     console.error("Error getting monthly summary:", error);
@@ -176,7 +183,10 @@ export const getPaginatedTransactionsAPI = (filters) => async (dispatch) => {
     const response = await apiConnector(
       "POST",
       GET_PAGINATED_TRANSACTIONS_API,
-      filters
+      filters,
+      {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+      }
     );
 
     dispatch(

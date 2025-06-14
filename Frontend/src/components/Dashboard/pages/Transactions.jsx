@@ -31,7 +31,7 @@ export const Transactions = () => {
 
   const income = monthlySummary?.income || 0;
   const expense = monthlySummary?.expense || 0;
-
+  const token = useSelector((state) => state.auth.token); 
   useEffect(() => {
     dispatch(
       getPaginatedTransactionsAPI({

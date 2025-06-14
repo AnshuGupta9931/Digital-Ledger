@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiconnector.jsx";
 import { categoryEndpoints } from "../apis.jsx";
-import { setCategories, setLoading } from "../../slices/categorySlice.jsx"; // ← also import setLoading
+import { setCategories, setLoading } from "../../slices/categorySlice.jsx"; 
 
 const {
     CREATE_CATEGORY_API,
@@ -43,11 +43,11 @@ export const fetchCategories = (token) => async (dispatch) => {
 
   try {
     const response = await apiConnector(
-      "POST",
+      "GET",
       GET_ALL_CATEGORY_API,
       null,
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       }
     );
 

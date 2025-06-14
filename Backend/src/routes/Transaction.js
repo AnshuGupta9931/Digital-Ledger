@@ -14,7 +14,7 @@ router.post("/filterTransaction", auth, filterTransactions);
 router.post("/getPage", auth, getPaginatedTransactions);
 router.post("/getMonthSummary", auth, getMonthlySummary);
 router.put("/updateTransaction", auth, updateTransaction);
-router.post("/deleteTransaction", auth, deleteTransaction);
+router.delete("/deleteTransaction", auth, deleteTransaction);
 
 
 // router.get("/instructorDashboard", auth, isInstructor, instructorDashboard);

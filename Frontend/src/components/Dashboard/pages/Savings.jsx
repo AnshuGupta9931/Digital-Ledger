@@ -13,7 +13,7 @@ import {
 export const Savings = () => {
   const dispatch = useDispatch();
   const { savings, loading } = useSelector((state) => state.saving);
-
+  const token = useSelector((state) => state.auth.token); 
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
@@ -28,16 +28,18 @@ export const Savings = () => {
   const [editGoalId, setEditGoalId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchSavings());
-  }, [dispatch]);
+    if (token) dispatch(fetchSavings(token)); 
+  }, [dispatch, token]);
 
   const handleCreate = (e) => {
     e.preventDefault();
-    dispatch(createSavingGoal({ title, goalAmount: targetAmount })).then(() => {
+    if (!token) return;
+
+    dispatch(createSavingGoal({ title, goalAmount: targetAmount }, token)).then(() => {
       setTitle("");
       setTargetAmount("");
       setShowModal(false);
-      dispatch(fetchSavings());
+      dispatch(fetchSavings(token)); // ✅ Sync
     });
   };
 
@@ -49,22 +51,22 @@ export const Savings = () => {
 
   const handleModalSubmit = () => {
     const amount = Number(modalAmount);
-    if (!amount || amount <= 0) return;
+    if (!amount || amount <= 0 || !token) return;
 
     const selectedGoal = savings.find((goal) => goal._id === selectedGoalId);
     if (!selectedGoal) return;
 
     if (activeModal === "add") {
-      dispatch(addToSavingGoal(selectedGoalId, amount)).then(() => {
-        dispatch(fetchSavings());
+      dispatch(addToSavingGoal(selectedGoalId, amount, token)).then(() => {
+        dispatch(fetchSavings(token));
       });
     } else if (activeModal === "sub") {
       if (amount > selectedGoal.savedAmount) {
         alert("You cannot subtract more than the saved amount.");
         return;
       }
-      dispatch(subFromSavingGoal(selectedGoalId, amount)).then(() => {
-        dispatch(fetchSavings());
+      dispatch(subFromSavingGoal(selectedGoalId, amount, token)).then(() => {
+        dispatch(fetchSavings(token));
       });
     }
 
@@ -74,8 +76,9 @@ export const Savings = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteSavingGoal(id)).then(() => {
-      dispatch(fetchSavings());
+    if (!token) return;
+    dispatch(deleteSavingGoal(id, token)).then(() => {
+      dispatch(fetchSavings(token));
     });
   };
 
@@ -87,18 +90,25 @@ export const Savings = () => {
   };
 
   const handleUpdate = (e) => {
-    e.preventDefault();
-    dispatch(
-      updateSavingGoal({
-        id: editGoalId,
-        title: editTitle,
-        goalAmount: editTargetAmount,
-      })
-    ).then(() => {
-      setEditModal(false);
-      dispatch(fetchSavings());
-    });
-  };
+  e.preventDefault();
+  if (!token) return;
+
+  const currentGoal = savings.find((goal) => goal._id === editGoalId);
+  if (!currentGoal) return;
+
+  dispatch(
+    updateSavingGoal({
+      id: editGoalId,
+      title: editTitle,
+      goalAmount: editTargetAmount,
+      savedAmount: currentGoal.savedAmount, 
+      token
+    })
+  ).then(() => {
+    setEditModal(false);
+    dispatch(fetchSavings(token));
+  });
+};
 
   return (
     <div className="min-h-screen w-full bg-[#fefcf8] p-10 text-gray-800">
