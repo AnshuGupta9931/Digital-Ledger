@@ -35,6 +35,33 @@ export const friendEndpoints = {
   DECLINE_REQUEST_API: BASE_URL + "/friends/declineFriend",
 };
 
+// DEBT ENDPOINTS
+export const debtEndpoints = {
+  CREATE_DEBT_API: BASE_URL + "/debts/createDebt",
+  SETTLE_DEBT_API: BASE_URL + "/debts/settleDebt",
+  GET_DEBTS_API: BASE_URL + "/debts/showAllDebt",
+  DELETE_DEBT_API: BASE_URL + "/debts/deleteDebt",
+};
+
+// SAVING ENDPOINTS
+export const savingEndpoints = {
+  CREATE_SAVING_GOAL_API: BASE_URL + "/savings/createSavings",
+  GET_ALL_SAVINGS_API: BASE_URL + "/savings/showAllSavings",
+  UPDATE_SAVING_GOAL_API: BASE_URL + "/savings/updateSavings",
+  DELETE_SAVING_API: BASE_URL + "/savings/deleteSavings",
+  ADD_TO_SAVING_API: BASE_URL + "/savings/addSavings",
+  SUB_FROM_SAVING_API: BASE_URL + "/savings/subSavings",
+};
+
+// GROUP ENDPOINTS
+export const groupEndpoints = {
+  CREATE_GROUP_API: BASE_URL + "/group/createGroup",
+  GET_USER_GROUPS_API: BASE_URL + "/group/showAllGroups",
+  GET_GROUP_BY_ID_API: BASE_URL + "/group/showGroupsById",
+  UPDATE_GROUP_API: BASE_URL + "/group/updateGroup",
+  DELETE_GROUP_API: BASE_URL + "/group/deleteGroup",
+};
+
 // RECURRING BILLS ENDPOINTS
 export const recurringBillsEndpoints = {
   GET_ALL_BILLS_API: BASE_URL + "/bills/showAllBills",
@@ -43,8 +70,8 @@ export const recurringBillsEndpoints = {
   DELETE_BILL_API: BASE_URL + "/bills/deleteBill",
   GET_BILL_BY_ID_API: BASE_URL + "/bills/getBillid",
 };
-   
-// Profile ENDPOINTS
+
+// PROFILE ENDPOINTS
 export const profileEndpoints = {
-  UPDATE_PROFILE_API : BASE_URL + "/profile/updateProfile",
-}
+  UPDATE_PROFILE_API: BASE_URL + "/profile/updateProfile",
+};

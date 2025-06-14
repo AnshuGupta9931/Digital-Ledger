@@ -5,15 +5,24 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
+import cookieParser from "cookie-parser";
+
+// Routes
 import userRoutes from "./routes/User.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
+import recurringBillsRoutes from "./routes/RecurringBills.js";
+import updateProfileRoutes from "./routes/Profile.js";
+import transactionRoutes from "./routes/Transaction.js";
+import categoryRoutes from "./routes/Category.js";
+import friendRoutes from "./routes/FriendRequest.js";
+import debtRoutes from "./routes/Debt.js";
+import savingRoutes from "./routes/Savings.js";
+import groupRoutes from "./routes/Group.js";
+
+// Passport config
 import "./middlewares/passport.js";
-import recurringBillsRoutes from "./routes/RecurringBills.js"
-import updateProfileRoutes from "./routes/Profile.js"
-// 🔥 New imports
-import http from "http";
-import { Server } from "socket.io";
-import cookieParser from "cookie-parser";
+
+// Environment setup
 dotenv.config({ path: "./.env" });
 
 // Express App Setup
@@ -30,6 +39,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+
 // Session and Passport setup
 app.use(
   session({
@@ -41,16 +51,26 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
+// Route registration
 app.use("/api/v1/auth", userRoutes);
 app.use("/auth", googleAuthRoutes);
-app.use("/api/v1/bills",recurringBillsRoutes);
-app.use("/api/v1/profile",updateProfileRoutes);
+app.use("/api/v1/bills", recurringBillsRoutes);
+app.use("/api/v1/profile", updateProfileRoutes);
+app.use("/api/v1/transaction", transactionRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/friends", friendRoutes);
+app.use("/api/v1/debts", debtRoutes);
+app.use("/api/v1/savings", savingRoutes);
+app.use("/api/v1/group", groupRoutes);
+
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
 });
 
-// ✅ Create HTTP server and bind Socket.IO
+// Socket.IO Setup
+import http from "http";
+import { Server } from "socket.io";
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -60,7 +80,6 @@ const io = new Server(server, {
   },
 });
 
-// ✅ Socket.IO logic
 const users = {};
 
 io.on("connection", (socket) => {
@@ -89,14 +108,9 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
-// for payment gateway
-
+// Payment Gateway (Stripe)
 import Stripe from "stripe";
-import { updateProfile } from "./controllers/Profile.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 
 app.post("/create-checkout-session", async (req, res) => {
   const { amount, name, reason } = req.body;
@@ -129,8 +143,7 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-
-// Start the server
+// Start Server
 const PORT = process.env.PORT || 7000;
 server.listen(PORT, () => {
   console.log(`🚀 Server Started Successfully at http://localhost:${PORT}`);

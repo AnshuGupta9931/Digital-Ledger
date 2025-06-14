@@ -28,7 +28,7 @@ import { OAuthSuccess } from './services/operations/OAuthSuccess.jsx'
 import { DashboardHeader, DashboardLayout, Sidebar } from "./components/Dashboard";
 import { DashboardHome } from './components/Dashboard/pages/DashboardHome.jsx'
 import { Transactions } from './components/Dashboard/pages/Transactions.jsx'
-import Categories from './components/Dashboard/pages/Categories.jsx'
+import {Categories} from './components/Dashboard/pages/Categories.jsx'
 import { RecurringBills } from './components/Dashboard/pages/RecuringBills.jsx'
 import { Reports } from './components/Dashboard/pages/Reports.jsx'
 import { Friends } from './components/Dashboard/pages/Friends.jsx'

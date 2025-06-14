@@ -110,9 +110,7 @@ export function signUp(
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     };
-  }
-  
-
+}  
 
   export function login(email, password, navigate) {
     return async (dispatch) => {

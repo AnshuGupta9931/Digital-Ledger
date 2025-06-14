@@ -5,4 +5,4 @@ const friendRequestSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' }
 },{timestamps: true})
 
-export const friendRequest = mongoose.model("FriendRequest",friendRequestSchema);
+export const friendRequest = mongoose.model("FriendRequest",friendRequestSchema); 
