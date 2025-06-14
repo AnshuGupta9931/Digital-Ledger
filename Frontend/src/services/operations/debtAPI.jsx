@@ -18,7 +18,7 @@ export const createDebtAPI = (data) => async (dispatch) => {
       CREATE_DEBT_API,
       data,
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -41,7 +41,7 @@ export const fetchDebtsAPI = () => async (dispatch) => {
       GET_DEBTS_API,
       null,
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -60,7 +60,7 @@ export const settleDebtAPI = (id) => async (dispatch) => {
       SETTLE_DEBT_API,
       { id },
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -81,7 +81,7 @@ export const deleteDebtAPI = (id) => async (dispatch) => {
       DELETE_DEBT_API,
       { id },
       {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 

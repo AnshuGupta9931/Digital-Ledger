@@ -20,14 +20,14 @@ const {
 } = recurringBillsEndpoints;
 
 // ✅ Create Recurring Bill — plain async function (not a thunk)
-export const createRecurringBill = async (data, token) => {
+export const createRecurringBill = async (data, t) => {
   const toastId = toast.loading("Creating recurring bill...");
   let result = null;
 
   try {
     const response = await apiConnector("POST", CREATE_BILL_API, data, {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
     console.log("Resonponse in RRApi.jsx",response);
     const bill = response?.data;
@@ -52,7 +52,7 @@ export const fetchRecurringBills = (token) => async (dispatch) => {
 
   try {
     const response = await apiConnector("GET", GET_ALL_BILLS_API, null, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     const bills = response?.data;
@@ -80,7 +80,7 @@ export const updateRecurringBill = async (data, token) => {
   try {
     const response = await apiConnector("PUT", UPDATE_BILL_API, data, {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     const updatedBill = response?.data;
@@ -105,7 +105,7 @@ export const deleteRecurringBill = async (id, token) => {
 
   try {
     const response = await apiConnector("DELETE", DELETE_BILL_API, {id}, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
     console.log("Response in deleter : ",response);
     toast.success("Bill deleted successfully");
@@ -127,7 +127,7 @@ export const getRecurringBillById = (id, token) => async (dispatch) => {
 
   try {
     const response = await apiConnector("GET", `${GET_BILL_BY_ID_API}/${id}`, null, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     const bill = response?.data;

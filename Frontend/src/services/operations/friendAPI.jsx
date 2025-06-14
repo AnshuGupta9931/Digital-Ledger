@@ -12,6 +12,7 @@ import {
   rejectFriendRequest,
 } from "../../slices/friendSlice.jsx";
 
+// Destructure API endpoints
 const {
   SEND_REQUEST_API,
   GET_ALL_FRIENDS_API,
@@ -20,17 +21,16 @@ const {
   DECLINE_REQUEST_API,
 } = friendEndpoints;
 
-const authHeader = {
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
-};
+// ✅ Always get fresh token from localStorage
+const getAuthHeader = () => ({
+  Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+});
 
 // ✅ Fetch all friends
 export const fetchFriendsAPI = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const response = await apiConnector("GET", GET_ALL_FRIENDS_API, null, authHeader);
-    
-    // ✅ Updated: expects { friends: [...] } format
+    const response = await apiConnector("GET", GET_ALL_FRIENDS_API, null, getAuthHeader());
     dispatch(setFriendsList(response.data || []));
     toast.success("Friends list updated");
   } catch (error) {
@@ -45,7 +45,7 @@ export const fetchFriendsAPI = () => async (dispatch) => {
 export const fetchPendingRequestsAPI = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const response = await apiConnector("GET", GET_PENDING_REQUESTS_API, null, authHeader);
+    const response = await apiConnector("GET", GET_PENDING_REQUESTS_API, null, getAuthHeader());
     console.log("API response pending:", response.data);
     dispatch(setPendingRequests(response.data || []));
     toast.success("Pending requests updated");
@@ -66,12 +66,11 @@ export const sendFriendRequestAPI = (email) => async (dispatch, getState) => {
 
   const { friends, pendingRequests } = getState().friend;
 
-  // Convert to arrays
   const friendArray = Object.values(friends);
   const pendingArray = Object.values(pendingRequests);
 
-  const alreadyFriend = friendArray.some(f => f.email === email);
-  const alreadyPending = pendingArray.some(r => r.email === email);
+  const alreadyFriend = friendArray.some((f) => f.email === email);
+  const alreadyPending = pendingArray.some((r) => r.email === email);
 
   if (alreadyFriend) {
     toast.error("User is already your friend");
@@ -85,7 +84,7 @@ export const sendFriendRequestAPI = (email) => async (dispatch, getState) => {
 
   const toastId = toast.loading("Sending friend request...");
   try {
-    const res = await apiConnector("POST", SEND_REQUEST_API, { email }, authHeader);
+    const res = await apiConnector("POST", SEND_REQUEST_API, { email }, getAuthHeader());
     toast.success(res.data.message || "Friend request sent", { id: toastId });
   } catch (err) {
     console.error("SEND FRIEND REQUEST ERROR:", err);
@@ -93,15 +92,14 @@ export const sendFriendRequestAPI = (email) => async (dispatch, getState) => {
   }
 };
 
-
 // ✅ Accept a friend request
 export const acceptFriendAPI = (friendId) => async (dispatch) => {
   const toastId = toast.loading("Accepting friend request...");
   try {
-    const response = await apiConnector("POST", ACCEPT_REQUEST_API, { requestId: friendId }, authHeader);
+    const response = await apiConnector("POST", ACCEPT_REQUEST_API, { requestId: friendId }, getAuthHeader());
 
     if (response.data?.message === "Friend request accepted") {
-      dispatch(acceptFriendRequest(friendId)); // use friendId or fetch full data separately if needed
+      dispatch(acceptFriendRequest(friendId));
       toast.success("Friend request accepted!", { id: toastId });
     } else {
       toast.error("Failed to accept friend request.", { id: toastId });
@@ -112,12 +110,11 @@ export const acceptFriendAPI = (friendId) => async (dispatch) => {
   }
 };
 
-
 // ✅ Decline a friend request
 export const declineFriendAPI = (friendId) => async (dispatch) => {
   const toastId = toast.loading("Declining friend request...");
   try {
-    await apiConnector("POST", DECLINE_REQUEST_API, { requestId: friendId }, authHeader);
+    await apiConnector("POST", DECLINE_REQUEST_API, { requestId: friendId }, getAuthHeader());
     dispatch(rejectFriendRequest(friendId));
     toast.success("Friend request declined", { id: toastId });
   } catch (err) {

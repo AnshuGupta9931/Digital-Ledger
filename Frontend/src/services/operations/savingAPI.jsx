@@ -23,7 +23,7 @@ export const createSavingGoal = (data, token) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const res = await apiConnector("POST", CREATE_SAVING_GOAL_API, data, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     dispatch(addSavingGoal(res.data.saving));
@@ -39,7 +39,7 @@ export const createSavingGoal = (data, token) => async (dispatch) => {
 export const fetchSavings = (token) => async (dispatch) => {
   try {
     const res = await apiConnector("GET", GET_ALL_SAVINGS_API, null, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     dispatch(setSavings(res.data.savings));
@@ -61,7 +61,7 @@ export const updateSavingGoal = ({ id, title, goalAmount, savedAmount, token }) 
         ...(savedAmount !== undefined && { savedAmount: Number(savedAmount) }),
       },
       {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -80,7 +80,7 @@ export const deleteSavingGoal = (id, token) => async (dispatch) => {
       DELETE_SAVING_API,
       { id },
       {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -99,7 +99,7 @@ export const addToSavingGoal = (id, amount, token) => async (dispatch) => {
       ADD_TO_SAVING_API,
       { id, amount },
       {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
@@ -118,7 +118,7 @@ export const subFromSavingGoal = (id, amount, token) => async (dispatch) => {
       SUB_FROM_SAVING_API,
       { id, amount },
       {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 

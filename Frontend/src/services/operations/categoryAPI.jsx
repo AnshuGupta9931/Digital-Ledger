@@ -15,7 +15,7 @@ export const createCategory = async (data, token) => {
   try {
     const response = await apiConnector("POST", CREATE_CATEGORY_API, data, {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     console.log("CREATE CATEGORY RESPONSE:", response);
@@ -47,7 +47,7 @@ export const fetchCategories = (token) => async (dispatch) => {
       GET_ALL_CATEGORY_API,
       null,
       {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
       }
     );
 
