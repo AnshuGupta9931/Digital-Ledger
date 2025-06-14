@@ -85,26 +85,32 @@ const users = {};
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  socket.on("register", (userName) => {
-    users[userName] = socket.id;
-    console.log(`Registered ${userName} with socket ID ${socket.id}`);
+  // Register user using their _id
+  socket.on("register", (userId) => {
+    users[userId] = socket.id;
+    console.log(`Registered user ${userId} with socket ID ${socket.id}`);
   });
 
+  // Handle private messages
   socket.on("private_message", ({ to, from, text }) => {
     const receiverSocketId = users[to];
+    console.log(`Message from ${from} to ${to}: ${text}`);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("receive_message", { text, from });
+    } else {
+      console.log(`User ${to} not connected.`);
     }
   });
 
+  // Clean up on disconnect
   socket.on("disconnect", () => {
-    for (const [name, id] of Object.entries(users)) {
-      if (id === socket.id) {
-        delete users[name];
+    for (const [userId, socketId] of Object.entries(users)) {
+      if (socketId === socket.id) {
+        delete users[userId];
+        console.log(`User ${userId} disconnected`);
         break;
       }
     }
-    console.log("User disconnected:", socket.id);
   });
 });
 
