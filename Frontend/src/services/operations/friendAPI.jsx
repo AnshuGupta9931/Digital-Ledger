@@ -19,6 +19,7 @@ const {
   GET_PENDING_REQUESTS_API,
   ACCEPT_REQUEST_API,
   DECLINE_REQUEST_API,
+  GET_ALL_CHATS_API
 } = friendEndpoints;
 
 // ✅ Always get fresh token from localStorage

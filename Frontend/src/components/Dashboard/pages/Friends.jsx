@@ -66,6 +66,26 @@ export const Friends = () => {
   const handleDecline = (id) => {
     dispatch(declineFriendAPI(id));
   };
+  const handleSelectFriend = async (friend) => {
+  setSelectedFriendId(friend._id);
+
+  try {
+    const res = await fetch(`/api/v1/messages/${currentUserId}/${friend._id}`);
+    const data = await res.json();
+
+    if (data.success) {
+      setMessages((prev) => ({
+        ...prev,
+        [friend._id]: data.messages.map((msg) => ({
+          text: msg.text,
+          fromUser: msg.from === currentUserId,
+        })),
+      }));
+    }
+  } catch (err) {
+    console.error("Failed to fetch chat history:", err);
+  }
+};
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedFriendId) return;
@@ -131,7 +151,7 @@ export const Friends = () => {
               Object.values(friendsList).map((friend) => (
                 <div
                   key={friend._id}
-                  onClick={() => setSelectedFriendId(friend._id)}
+                  onClick={() => handleSelectFriend(friend)}
                   className={`p-2 rounded cursor-pointer hover:bg-teal-100 ${
                     selectedFriendId === friend._id ? "bg-teal-200" : ""
                   }`}

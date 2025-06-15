@@ -33,6 +33,7 @@ export const friendEndpoints = {
   GET_PENDING_REQUESTS_API: BASE_URL + "/friends/showAllPendingFriends",
   ACCEPT_REQUEST_API: BASE_URL + "/friends/acceptFriend",
   DECLINE_REQUEST_API: BASE_URL + "/friends/declineFriend",
+  GET_ALL_CHATS_API : BASE_URL + "/messages",
 };
 
 // DEBT ENDPOINTS

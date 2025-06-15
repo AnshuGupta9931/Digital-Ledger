@@ -6,7 +6,7 @@ import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-
+import Message from "./models/Message.js";
 // Routes
 import userRoutes from "./routes/User.js";
 import googleAuthRoutes from "./routes/googleAuth.js";
@@ -18,7 +18,7 @@ import friendRoutes from "./routes/FriendRequest.js";
 import debtRoutes from "./routes/Debt.js";
 import savingRoutes from "./routes/Savings.js";
 import groupRoutes from "./routes/Group.js";
-
+import messageRoutes from "./routes/Message.js"
 // Passport config
 import "./middlewares/passport.js";
 
@@ -62,7 +62,7 @@ app.use("/api/v1/friends", friendRoutes);
 app.use("/api/v1/debts", debtRoutes);
 app.use("/api/v1/savings", savingRoutes);
 app.use("/api/v1/group", groupRoutes);
-
+app.use("/api/v1/messages",messageRoutes);
 app.get("/", (req, res) => {
   res.send(`<h1>This is Homepage by Anshu</h1>`);
 });
@@ -92,16 +92,23 @@ io.on("connection", (socket) => {
   });
 
   // Handle private messages
-  socket.on("private_message", ({ to, from, text }) => {
-    const receiverSocketId = users[to];
-    console.log(`Message from ${from} to ${to}: ${text}`);
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("receive_message", { text, from });
-    } else {
-      console.log(`User ${to} not connected.`);
-    }
-  });
+  socket.on("private_message", async ({ to, from, text }) => {
+  console.log(`Message from ${from} to ${to}: ${text}`);
 
+  // Save to MongoDB for offline persistence
+  try {
+    await Message.create({ from, to, text });
+  } catch (err) {
+    console.error("Error saving message:", err);
+  }
+
+  const receiverSocketId = users[to];
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("receive_message", { text, from });
+  } else {
+    console.log(`User ${to} not connected. Message stored.`);
+  }
+});
   // Clean up on disconnect
   socket.on("disconnect", () => {
     for (const [userId, socketId] of Object.entries(users)) {
