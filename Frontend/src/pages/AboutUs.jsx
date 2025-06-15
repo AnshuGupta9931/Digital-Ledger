@@ -26,22 +26,24 @@ const AboutUs = () => {
       <div className="flex flex-wrap items-center justify-center gap-6">
         {[
           {
-            name: "Donald Jackman",
-            role: "Content Creator",
-            image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200",
-            text: "I've been using Digital Ledger for nearly two years, primarily for expense tracking, and it has been incredibly user-friendly, making my work much easier."
+            name: "Sumit Kumar Yadav",
+            role: "Frontend Developer",
+            image: "https://media.licdn.com/dms/image/v2/D4D03AQHBtNxYsiq1Tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711910822959?e=1755734400&v=beta&t=4q2JYQa_eJ9bG3cryHvKkqqs6zk2hrktSDOU9sDofck",
+            text: "I focused on building a clean, responsive UI that makes tracking finances simple and enjoyable for users."
+
+
           },
           {
-            name: "Richard Nelson",
-            role: "Instagram Influencer",
-            image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200",
-            text: "I love how Digital Ledger lets me split bills with friends effortlessly. The insights I get from the dashboards are amazing too!"
+            name: "Aman Poddar",
+            role: "Backend Developer",
+            image: "https://media.licdn.com/dms/image/v2/D5603AQEEHI4Fl-e5jQ/profile-displayphoto-shrink_800_800/B56ZQxi3GcGoAg-/0/1735998011115?e=1755734400&v=beta&t=HUN0AUKgoC58SO7n2gzGz-HLG9w4tTEiP1rli7NMZCA",
+            text: "I developed the backend systems to ensure fast, secure, and reliable features like split expenses and Transactions."
           },
           {
-            name: "Jessica Patel",
-            role: "Startup Founder",
-            image: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=200",
-            text: "Digital Ledger has streamlined how I manage shared expenses with my co-founders. Highly recommended for teams!"
+            name: "Anshu Gupta",
+            role: "Full Stack Developer",
+            image: "https://media.licdn.com/dms/image/v2/D4D03AQEUl0ib4W_22g/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1718249436001?e=1755734400&v=beta&t=4qsyKe8TP_d2Fn2HAWh2V5ke9GdNVvi7BHRwxEgOnXc",
+            text: "I helped build core features and improve the user experience, focusing on making personal finance simpler and fast."
           },
         ].map(({ name, role, image, text }, idx) => (
           <div key={idx} className="text-sm w-80 border border-gray-300 pb-6 rounded-lg bg-white shadow-[0px_4px_15px_0px] shadow-black/5">

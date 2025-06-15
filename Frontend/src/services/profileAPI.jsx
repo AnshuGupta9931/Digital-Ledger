@@ -10,7 +10,7 @@ export const updateProfileDetails = async (formData, token) => {
 
   try {
     const response = await apiConnector("PUT", UPDATE_PROFILE_API, formData, {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
     });
 
     result = response?.data;
