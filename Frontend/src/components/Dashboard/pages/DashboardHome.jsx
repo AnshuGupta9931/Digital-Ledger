@@ -1,82 +1,136 @@
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useSelector } from "react-redux";
+import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 
-const pieData = [
-  { name: "Food", value: 400, color: "#3b82f6" },
-  { name: "Shopping", value: 300, color: "#22c55e" },
-  { name: "Entertainment", value: 200, color: "#f97316" },
-  { name: "Other", value: 100, color: "#8b5cf6" },
+const COLORS = [
+  "#3b82f6", "#22c55e", "#f97316", "#8b5cf6", "#ef4444", "#14b8a6",
+  "#eab308", "#ec4899", "#0ea5e9", "#7c3aed", "#f43f5e", "#10b981"
 ];
 
 export const DashboardHome = () => {
+  const { transactions } = useSelector((state) => state.transaction);
+
+  let income = 0;
+  let expenses = 0;
+  let transactionCount = 0;
+  let highest = 0;
+  const dailyTotals = {};
+  const categoryMap = {};
+
+  transactions.forEach((tx) => {
+    transactionCount++;
+    if (tx.amount > highest) highest = tx.amount;
+    const date = new Date(tx.date).toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+
+    if (tx.type === "income") {
+      income += tx.amount;
+    } else {
+      expenses += tx.amount;
+      categoryMap[tx.category || "Other"] = (categoryMap[tx.category || "Other"] || 0) + tx.amount;
+      dailyTotals[date] = (dailyTotals[date] || 0) + tx.amount;
+    }
+  });
+
+  const balance = income - expenses;
+
+  const pieChartData = Object.entries(categoryMap).map(([name, value], i) => ({
+    name,
+    value,
+    color: COLORS[i % COLORS.length],
+  }));
+
+  const lineChartData = Object.entries(dailyTotals).map(([date, amount]) => ({
+    date,
+    amount
+  }));
+
   return (
-    <div className="w-full bg-[#fefcf8] p-10 text-gray-800 min-h-screen">
-      <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] transition-all duration-300 p-6 w-full max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#fefcf8] p-6 text-gray-800">
+      <header className="mb-6 text-2xl font-semibold text-gray-900">Welcome back 👋</header>
 
-        {/* Balance Header */}
-        <div className="text-orange-600 font-bold text-sm mb-1">BALANCE</div>
-        <div className="text-4xl font-bold text-gray-900 mb-6">$2,300.00</div>
+      {/* Overview Cards */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-2xl shadow">
+          <div className="text-sm text-orange-600">Balance</div>
+          <div className="text-2xl font-bold">${balance.toFixed(2)}</div>
+        </div>
+        <div className="bg-green-100 p-4 rounded-2xl shadow">
+          <div className="text-sm text-green-800">Income</div>
+          <div className="text-xl font-bold">${income.toFixed(2)}</div>
+        </div>
+        <div className="bg-red-100 p-4 rounded-2xl shadow">
+          <div className="text-sm text-red-600">Expenses</div>
+          <div className="text-xl font-bold">${expenses.toFixed(2)}</div>
+        </div>
+        <div className="bg-purple-100 p-4 rounded-2xl shadow">
+          <div className="text-sm text-purple-700">Transactions</div>
+          <div className="text-xl font-bold">{transactionCount}</div>
+        </div>
+      </div>
 
-        {/* Income & Expenses with glow */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="bg-green-100 p-4 rounded-xl flex-1 shadow-[0_8px_30px_rgba(34,197,94,0.3)] transition-all duration-300 hover:shadow-[0_10px_35px_rgba(34,197,94,0.4)]">
-            <div className="text-green-800 text-sm">Income</div>
-            <div className="text-2xl font-bold text-gray-900">$5,000.00</div>
-          </div>
-          <div className="bg-red-100 p-4 rounded-xl flex-1 shadow-[0_8px_30px_rgba(239,68,68,0.3)] transition-all duration-300 hover:shadow-[0_10px_35px_rgba(239,68,68,0.4)]">
-            <div className="text-red-600 text-sm">Expenses</div>
-            <div className="text-2xl font-bold text-red-600">$2,700.00</div>
-          </div>
+      {/* Pie + Summary */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-10">
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h2 className="text-lg font-semibold mb-4">Expense Distribution</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={pieChartData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                label
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell key={index} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </div>
 
-        {/* Summary + Pie Chart side-by-side (original orientation) */}
-        <div className="flex flex-col lg:flex-row gap-8 mb-6">
-          {/* Summary List with subtle glow */}
-          <div className="bg-white rounded-xl p-4 w-full lg:w-1/3 shadow-[0_6px_25px_rgba(59,130,246,0.1)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.2)] transition-all duration-300">
-            <div className="text-xl font-semibold mb-2">Summary</div>
-            <ul className="text-md space-y-2">
-              {pieData.map((item) => (
-                <li key={item.name} className="flex items-center space-x-2">
-                  <span
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  ></span>
-                  <span>{item.name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Pie Chart with glow */}
-          <div className="bg-white rounded-xl p-4 w-full lg:w-2/3 shadow-[0_6px_25px_rgba(139,92,246,0.15)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.25)] transition-all duration-300">
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Recent Transactions */}
-        <div>
-          <div className="text-xl font-semibold mb-2">Recent Transactions</div>
-          <ul className="text-md text-gray-700 space-y-1 bg-gray-50 p-4 rounded-lg shadow-[0_4px_15px_rgba(0,0,0,0.05)]">
-            <li>🛒 Groceries</li>
-            <li>🏠 Rent</li>
-            <li>🎬 Movies</li>
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h2 className="text-lg font-semibold mb-4">Top Categories</h2>
+          <ul className="space-y-2">
+            {pieChartData.map((item, index) => (
+              <li key={index} className="flex items-center space-x-2">
+                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
+                <span>{item.name}</span>
+                <span className="ml-auto font-semibold">${item.value.toFixed(2)}</span>
+              </li>
+            ))}
           </ul>
         </div>
+      </div>
+
+      {/* Trend Line Chart */}
+      <div className="bg-white p-6 rounded-xl shadow mb-10">
+        <h2 className="text-lg font-semibold mb-4">Spending Trend</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={lineChartData}>
+            <XAxis dataKey="date" stroke="#888" />
+            <YAxis stroke="#888" />
+            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Recent Transactions */}
+      <div className="bg-white p-6 rounded-xl shadow">
+        <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
+        <ul className="divide-y divide-gray-200">
+          {transactions.slice(0, 5).map((tx, i) => (
+            <li key={i} className="py-2 flex justify-between">
+              <span>{tx.type === "income" ? "💰" : "💸"} {tx.category || "Unknown"}</span>
+              <span className={tx.type === "income" ? "text-green-600" : "text-red-600"}>${tx.amount.toFixed(2)}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
 };
+
+export default DashboardHome;
