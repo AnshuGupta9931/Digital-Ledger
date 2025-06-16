@@ -14,7 +14,16 @@ export const createGroup = async (req, res) => {
     });
 
     await newGroup.save();
-
+    await Promise.all(
+      members.map((memberId) =>
+        User.findByIdAndUpdate(memberId, {
+          $addToSet: { groups: newGroup._id }, // prevents duplicates
+        })
+      )
+    );
+     await User.findByIdAndUpdate(createdBy, {
+      $addToSet: { groups: newGroup._id },
+    });
     // ✅ Populate member names/emails before sending
     await newGroup.populate("members", "firstName lastName email");
 

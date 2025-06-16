@@ -37,7 +37,7 @@ const Profile = () => {
       setFormData({
         contactNumber: user.additionalDetails?.contactNumber || "",
         dateOfBirth: user.additionalDetails?.dateOfBirth || "",
-        gender: user.additionalDetails?.gender || "",
+        gender: user.additionalDetails?.gender || "Male",
         about: user.additionalDetails?.about || "",
       });
     }
@@ -133,7 +133,7 @@ const Profile = () => {
           icon={<UsersIcon className="h-6 w-6 text-teal-600" />}
           label="Friends & Groups"
         >
-          {user.friendRequest?.length} Requests, {user.groups?.length} Groups
+          {user.friends?.length} Friends, {user.groups?.length} Groups
         </StaticCard>
         <StaticCard
           icon={<CalendarDaysIcon className="h-6 w-6 text-pink-600" />}

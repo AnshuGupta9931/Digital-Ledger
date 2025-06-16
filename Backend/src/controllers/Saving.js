@@ -1,5 +1,5 @@
 import { Saving } from "../models/Saving.js";
-
+import { User } from "../models/User.js";
 export const createSavingGoals = async (req, res) => {
   try {
     const { title, goalAmount } = req.body; // ✅ FIXED
@@ -101,6 +101,11 @@ export const addToSaving = async (req, res) => {
     saving.savedAmount += amount;
     await saving.save();
 
+    // ✅ Update user's total savings
+    await User.findByIdAndUpdate(saving.user, {
+      $inc: { savings: amount },
+    });
+
     res.status(200).json({ success: true, saving });
   } catch (err) {
     console.error("Error adding to saving:", err);
@@ -109,6 +114,7 @@ export const addToSaving = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
 
 
 // sub to saved amount
@@ -131,10 +137,16 @@ export const subToSaving = async (req, res) => {
         .json({ success: false, message: "Saving not found" });
     }
 
-    saving.savedAmount -= amount;
-    if (saving.savedAmount < 0) saving.savedAmount = 0;
-
+    const deductedAmount = Math.min(saving.savedAmount, amount);
+    saving.savedAmount -= deductedAmount;
     await saving.save();
+
+    // ✅ Decrease user total savings, but not below 0
+    const user = await User.findById(saving.user);
+    if (user) {
+      user.savings = Math.max(0, user.savings - deductedAmount);
+      await user.save();
+    }
 
     res.status(200).json({ success: true, saving });
   } catch (err) {
