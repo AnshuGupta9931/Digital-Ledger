@@ -41,10 +41,6 @@ export const Home = () => {
             title="Groups"
             description="Organize group spending, manage dues, and simplify settlements."
           />
-          <Section
-            title="Settings"
-            description="Manage your profile, account preferences, and app configurations."
-          />
         </div>
 
       </div>
