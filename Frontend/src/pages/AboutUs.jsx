@@ -38,7 +38,7 @@ const AboutUs = () => {
         {[
           {
             name: "Sumit Kumar Yadav",
-            role: "Frontend Developer",
+            role: "Full Stack Developer",
             image: "https://media.licdn.com/dms/image/v2/D4D03AQHBtNxYsiq1Tg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711910822959?e=1755734400&v=beta&t=4q2JYQa_eJ9bG3cryHvKkqqs6zk2hrktSDOU9sDofck",
             text: "I focused on building a clean, responsive UI that makes tracking finances simple and enjoyable for users.",
             linkedin: "https://www.linkedin.com/in/sumitslin/",
@@ -46,7 +46,7 @@ const AboutUs = () => {
           },
           {
             name: "Aman Poddar",
-            role: "Backend Developer",
+            role: "Full Stack Developer",
             image: "https://media.licdn.com/dms/image/v2/D5603AQEEHI4Fl-e5jQ/profile-displayphoto-shrink_800_800/B56ZQxi3GcGoAg-/0/1735998011115?e=1755734400&v=beta&t=HUN0AUKgoC58SO7n2gzGz-HLG9w4tTEiP1rli7NMZCA",
             text: "I developed the backend systems to ensure fast, secure, and reliable features like split expenses and transactions.",
             linkedin: "https://www.linkedin.com/in/amanpoddar2003/",

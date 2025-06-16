@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 // Image imports
 import DashboardImg from "../assets/images/DashBoard.png";
@@ -12,7 +11,6 @@ import ReportsImg from "../assets/images/Reports.jpeg"     // NEW
 import CategoriesImg from "../assets/images/Categories.jpeg"; // NEW
 
 export const Home = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 p-6">
@@ -38,49 +36,41 @@ export const Home = () => {
             title="Dashboard"
             description="View your total balance, income, expenses, and savings in one glance."
             image={DashboardImg}
-            onClick={() => navigate("/dashboard")}
           />
           <Section
             title="Transactions"
             description="Log and manage your income and spending with categories and filters."
             image={TransactionsImg}
-            onClick={() => navigate("/transactions")}
           />
           <Section
             title="Recurring Bills"
             description="Track regular expenses like rent, bills, and subscriptions easily."
             image={RecurringImg}
-            onClick={() => navigate("/recurring")}
           />
           <Section
             title="Friends"
             description="Add friends, chat with them, and split expenses in real time."
             image={FriendsImg}
-            onClick={() => navigate("/friends")}
           />
           <Section
             title="Groups"
             description="Organize group spending, manage dues, and simplify settlements."
             image={GroupsImg}
-            onClick={() => navigate("/groups")}
           />
           <Section
             title="Debt Settlements"
             description="Settle IOUs and outstanding balances with your friends or group members."
             image={DebtImg}
-            onClick={() => navigate("/debts")}
           />
           <Section
             title="Reports"
             description="Generate insightful reports to analyze your spending and savings trends."
             image={ReportsImg}
-            onClick={() => navigate("/reports")}
           />
           <Section
             title="Categories"
             description="Create and manage categories for more organized transaction tracking."
             image={CategoriesImg}
-            onClick={() => navigate("/categories")}
           />
         </div>
       </div>
