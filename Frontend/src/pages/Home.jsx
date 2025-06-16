@@ -6,9 +6,9 @@ import TransactionsImg from "../assets/images/Transactions.png";
 import RecurringImg from "../assets/images/RecurringBills.png";
 import FriendsImg from "../assets/images/Friends.png";
 import GroupsImg from "../assets/images/TeamBudgeting.png";
-import DebtImg from "../assets/images/DebtSettlements.jpeg"; // NEW
-import ReportsImg from "../assets/images/Reports.jpeg"     // NEW
-import CategoriesImg from "../assets/images/Categories.jpeg"; // NEW
+import DebtImg from "../assets/images/DebtSettlements.jpeg"; 
+import ReportsImg from "../assets/images/Reports.jpeg"    
+import CategoriesImg from "../assets/images/Categories.jpeg"; 
 
 export const Home = () => {
 
