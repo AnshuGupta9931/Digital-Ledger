@@ -4,7 +4,8 @@ import AboutUsImage from "../assets/images/AboutUs.png";
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 flex flex-col items-center justify-start p-6 pt-24">
+    <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 flex flex-col items-center justify-start p-6 pt-12">
+
 
       {/* Hero Section with Our Mission */}
       <div className="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between mb-12 gap-10">
