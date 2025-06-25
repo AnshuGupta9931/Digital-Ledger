@@ -30,7 +30,7 @@ export const resetPasswordToken = async (req, res) => {
         );
 
         // Create reset password URL
-        const url = `http://localhost:5173/update-password/${token}` || `http://localhost:3000/update-password/${token}`;
+        const url = `https://digital-ledger-frontend.onrender.com/update-password/${token}` || `https://digital-ledger-frontend.onrender.com/update-password/${token}`;
 
         // Send email
         await mailSender(email, "Password Reset Link", `Password Reset Link: ${url}`);

@@ -26,7 +26,7 @@ router.get(
     res.clearCookie(token);
     // Optional: Redirect with token in query
     res.redirect(
-      `http://localhost:5173/oauth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`
+      `https://digital-ledger-frontend.onrender.com/oauth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`
     );
     
   }
