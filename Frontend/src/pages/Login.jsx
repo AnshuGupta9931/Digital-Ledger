@@ -103,7 +103,7 @@ export const Login = () => {
           {/* Google Login */}
           <button
             className="w-full flex items-center justify-center gap-2 border py-3 rounded-xl hover:bg-gray-100 transition duration-300 shadow-lg hover:shadow-2xl focus:outline-none"
-            onClick={() => (window.location.href = "http://localhost:8000/auth/google")}
+            onClick={() => (window.location.href = "https://digital-ledger-backend.onrender.com/auth/google")}
           >
             <FcGoogle className="text-xl" />
             Log in with Google

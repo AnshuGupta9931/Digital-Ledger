@@ -80,7 +80,7 @@ export const Signup = () => {
           {/* Google Signup */}
           <button
             onClick={() =>
-              (window.location.href = "http://localhost:8000/auth/google")
+              (window.location.href = "https://digital-ledger-backend.onrender.com/auth/google")
             }
             className="w-full flex items-center justify-center gap-2 py-3 px-5 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium shadow hover:shadow-md mb-6"
           >

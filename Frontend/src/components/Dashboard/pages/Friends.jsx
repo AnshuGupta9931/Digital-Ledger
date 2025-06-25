@@ -9,7 +9,7 @@ import {
 } from "../../../services/operations/friendAPI";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8000");
+const socket = io("https://digital-ledger-backend.onrender.com");
 
 export const Friends = () => {
   const dispatch = useDispatch();

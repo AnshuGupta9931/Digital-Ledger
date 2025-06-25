@@ -24,7 +24,7 @@ export const DebtAndSettlements = () => {
 
   const handleSettleUp = async (debt) => {
     try {
-      const response = await fetch("http://localhost:8000/create-checkout-session", {
+      const response = await fetch("https://digital-ledger-backend.onrender.com/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

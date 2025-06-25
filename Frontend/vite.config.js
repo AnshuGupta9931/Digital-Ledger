@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // Backend server
+        target: 'https://digital-ledger-backend.onrender.com', // Backend server
         changeOrigin: true,
         secure: false,
       },
