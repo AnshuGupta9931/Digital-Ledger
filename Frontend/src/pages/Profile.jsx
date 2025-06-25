@@ -56,12 +56,10 @@ const Profile = () => {
     setLoading(true);
     try {
       const response = await updateProfileDetails(formData, token);
-      console.log("Updated Profile Response:", response);
       alert("Profile updated successfully!");
       setIsEditing(false);
       dispatch(setUser(response.data));
     } catch (err) {
-      console.error("Update failed:", err);
       alert("Failed to update profile.");
     } finally {
       setLoading(false);

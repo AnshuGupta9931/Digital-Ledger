@@ -32,7 +32,6 @@ export const UpdatePassword = () => {
     const handleOnSubmit = (e) => {
         e.preventDefault()
         const token = location.pathname.split("/").at(-1);
-        console.log("Extracted token:", token);
         dispatch(resetPassword(password, confirmPassword, token, navigate))
     }
 

@@ -44,7 +44,6 @@ const recurringBillsSlice = createSlice({
 
       if (!exists) {
         state.bills.push(newBill);
-        console.log("New Bill was : " ,newBill);
         toast.success(`Bill ${newBill.name} added`);
       } else {
         toast.error(`Bill ${newBill.name} already exists`);
