@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
-import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
   transactions: localStorage.getItem("transactions")
@@ -45,7 +44,7 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction: (state, action) => {
       let tx = action.payload;
-      if (!tx._id) tx._id = uuidv4();
+      if (!tx._id) tx._id = crypto.randomUUID();
       if (tx.isSynced === undefined) tx.isSynced = false;
 
       state.transactions.push(tx);
