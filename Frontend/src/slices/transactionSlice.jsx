@@ -44,7 +44,7 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction: (state, action) => {
       let tx = action.payload;
-      if (!tx._id) tx._id = crypto.randomUUID();
+      if (!tx._id) tx._id = uuidv4();
       if (tx.isSynced === undefined) tx.isSynced = false;
 
       state.transactions.push(tx);

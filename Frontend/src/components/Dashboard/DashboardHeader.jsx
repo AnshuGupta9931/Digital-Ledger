@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../slices/authSlice.jsx";
 import { setUser } from "../../slices/profileSlice.jsx";
+import { resetTransactions } from "../../slices/transactionSlice.jsx";
 
 const DashboardHeader = ({ toggleSidebar }) => {
   const location = useLocation();
@@ -27,10 +28,14 @@ const DashboardHeader = ({ toggleSidebar }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     dispatch(setToken(null));
     dispatch(setUser(null));
+    dispatch(resetTransactions());
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("transactions");
+    localStorage.removeItem("totalIncome");
+    localStorage.removeItem("totalExpense");
     navigate("/login");
   };
 

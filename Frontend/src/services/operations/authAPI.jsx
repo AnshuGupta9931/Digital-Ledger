@@ -4,8 +4,7 @@ import { setLoading, setToken } from "../../slices/authSlice.jsx"
 import { apiConnector } from "../apiconnector.jsx"
 import { endpoints } from "../apis.jsx"
 import { setUser } from "../../slices/profileSlice"
-import { useNavigate } from "react-router-dom"
-import { useDispatch,useSelector } from "react-redux"
+import { resetTransactions } from "../../slices/transactionSlice.jsx"
 const {
     SENDOTP_API,
     SIGNUP_API,
@@ -125,10 +124,16 @@ export function signUp(
           image: userImage,
         };
   
+        // Clear any previous user's cached transactions
+        dispatch(resetTransactions());
+        localStorage.removeItem("transactions");
+        localStorage.removeItem("totalIncome");
+        localStorage.removeItem("totalExpense");
+
         // Save to Redux
         dispatch(setToken(response.data.token));
         dispatch(setUser(response.data.user));
-  
+
         // Save to localStorage
         localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -147,12 +152,16 @@ export function signUp(
   
 export function logout(navigate) {
     return (dispatch) => {
-      dispatch(setToken(null))
-      dispatch(setUser(null))
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      toast.success("Logged Out")
-      navigate("/")
+      dispatch(setToken(null));
+      dispatch(setUser(null));
+      dispatch(resetTransactions());
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("transactions");
+      localStorage.removeItem("totalIncome");
+      localStorage.removeItem("totalExpense");
+      toast.success("Logged Out");
+      navigate("/");
     }
 }
 
