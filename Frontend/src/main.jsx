@@ -72,7 +72,7 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path='/success' element={<PaymentSuccess/>}/>
-      <Route path='/success' element={<PaymentCancelled/>}/>
+      <Route path='/cancel' element={<PaymentCancelled/>}/>
 
     </>
   )

@@ -1,9 +1,10 @@
 import express from "express";
 import Message from "../models/Message.js";
+import { auth } from "../middlewares/auth.js";
 const router = express.Router();
 
 // Get messages between two users
-router.get("/:userId/:friendId", async (req, res) => {
+router.get("/:userId/:friendId", auth, async (req, res) => {
   const { userId, friendId } = req.params;
 
   try {

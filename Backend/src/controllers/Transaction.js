@@ -4,7 +4,11 @@ import { Categories } from "../models/Categories.js";
 export const createTransaction = async (req, res) => {
   try {
     const { amount, type, category, description, date } = req.body;
-    const userId = req.user.id;
+    const userId = req.user._id;
+
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      return res.status(400).json({ error: "Amount must be a positive number." });
+    }
 
     const newTransaction = new Transaction({
       user: userId,
@@ -43,7 +47,7 @@ export const createTransaction = async (req, res) => {
 // Get all transactions for a user
 export const getAllTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.find({ user: req.user.id }).sort({ date: -1 });
+    const transactions = await Transaction.find({ user: req.user._id }).sort({ date: -1 });
 
     res.json({ transactions });
   } catch (err) {
@@ -56,7 +60,7 @@ export const filterTransactions = async (req, res) => {
   try {
     const { start, end, category } = req.body;
 
-    const query = { user: req.user.id };
+    const query = { user: req.user._id };
 
     if (start && end) {
       query.date = {
@@ -82,15 +86,15 @@ export const getPaginatedTransactions = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.body;
 
-    const parsedPage = parseInt(page);
-    const parsedLimit = parseInt(limit);
+    const parsedPage = Math.max(1, parseInt(page) || 1);
+    const parsedLimit = Math.min(100, Math.max(1, parseInt(limit) || 10));
 
-    const transactions = await Transaction.find({ user: req.user.id })
+    const transactions = await Transaction.find({ user: req.user._id })
       .sort({ date: -1 })
       .skip((parsedPage - 1) * parsedLimit)
       .limit(parsedLimit);
 
-    const total = await Transaction.countDocuments({ user: req.user.id });
+    const total = await Transaction.countDocuments({ user: req.user._id });
 
     res.json({
       total,
@@ -127,7 +131,7 @@ export const getPaginatedTransactions = async (req, res) => {
   
       // Fetch transactions for the month
       const transactions = await Transaction.find({
-        user: req.user.id,
+        user: req.user._id,
         date: { $gte: start, $lte: end },
       });
   
@@ -160,6 +164,10 @@ export const updateTransaction = async (req, res) => {
 
     const userId = req.user._id;
 
+    if (existingTransaction.user.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Not authorized to update this transaction" });
+    }
+
     // Adjust category totals if it's an expense
     if (existingTransaction.type === "expense") {
       // Subtract old amount from old category
@@ -186,6 +194,7 @@ export const updateTransaction = async (req, res) => {
 
     // Update the transaction
     existingTransaction.amount = amount;
+    existingTransaction.type = type;
     existingTransaction.category = category;
     existingTransaction.description = description;
     existingTransaction.date = date;
@@ -209,9 +218,11 @@ export const deleteTransaction = async (req, res) => {
       return res.status(404).json({ message: "Transaction not found" });
     }
 
-    const userId = req.user.id || req.user._id;
+    const userId = req.user._id;
 
-    console.log("Deleting transaction:", transaction);
+    if (transaction.user.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Not authorized to delete this transaction" });
+    }
 
     // Update category total if it's an expense
     if (transaction.type === "expense") {
@@ -221,13 +232,9 @@ export const deleteTransaction = async (req, res) => {
       });
 
       if (category) {
-        console.log("Original totalSpent:", category.totalSpent);
         category.totalSpent -= Number(transaction.amount);
         category.totalSpent = Math.max(0, category.totalSpent);
         await category.save();
-        console.log("Updated category:", category);
-      } else {
-        console.warn("Category not found for:", transaction.category);
       }
     }
 

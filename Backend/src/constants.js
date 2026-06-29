@@ -1,1 +1,1 @@
-export const DB_NAME = "MeetingProjectDB"
+export const DB_NAME = "DigitalLedgerDB"

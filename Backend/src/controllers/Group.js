@@ -86,7 +86,6 @@ export const updateGroup = async (req, res) => {
 
 
     if (!updatedGroup) return res.status(404).json({ message: "Group not found" });
-    console.log("Group response:", updatedGroup);
 
     res.status(200).json({ message: "Group updated", group: updatedGroup });
   } catch (error) {

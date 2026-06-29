@@ -9,6 +9,10 @@ export const createSavingGoals = async (req, res) => {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
+    if (isNaN(goalAmount) || Number(goalAmount) <= 0) {
+      return res.status(400).json({ success: false, message: "Goal amount must be a positive number." });
+    }
+
     const newSaving = await Saving.create({
       user: userId,
       title,
@@ -28,7 +32,7 @@ export const getAllSavingForUser = async(req,res)=>{
     try{
         const userId = req.user.id;
         const savings = await Saving.find({user : userId});
-        res.status(201).json({success : true,savings});
+        res.status(200).json({success : true,savings});
     }catch(error){
         console.error("Error fetching savings:", error);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -67,11 +71,17 @@ export const deleteSavingGoal = async (req, res) => {
       const { id } = req.body;
   
       const deletedSaving = await Saving.findByIdAndDelete(id);
-  
+
       if (!deletedSaving) {
         return res.status(404).json({ success: false, message: "Saving not found" });
       }
-  
+
+      if (deletedSaving.savedAmount > 0) {
+        await User.findByIdAndUpdate(deletedSaving.user, {
+          $inc: { savings: -deletedSaving.savedAmount },
+        });
+      }
+
       res.status(200).json({ success: true, message: "Saving deleted successfully" });
     } catch (err) {
       console.error("Error deleting saving goal:", err);

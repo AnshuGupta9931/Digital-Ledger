@@ -43,7 +43,7 @@ app.use(cookieParser());
 // Session and Passport setup
 app.use(
   session({
-    secret: "your-session-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
@@ -83,38 +83,30 @@ const io = new Server(server, {
 const users = {};
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
   // Register user using their _id
   socket.on("register", (userId) => {
     users[userId] = socket.id;
-    console.log(`Registered user ${userId} with socket ID ${socket.id}`);
   });
 
   // Handle private messages
   socket.on("private_message", async ({ to, from, text }) => {
-  console.log(`Message from ${from} to ${to}: ${text}`);
+    try {
+      await Message.create({ from, to, text });
+    } catch (err) {
+      console.error("Error saving message:", err);
+    }
 
-  // Save to MongoDB for offline persistence
-  try {
-    await Message.create({ from, to, text });
-  } catch (err) {
-    console.error("Error saving message:", err);
-  }
+    const receiverSocketId = users[to];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("receive_message", { text, from });
+    }
+  });
 
-  const receiverSocketId = users[to];
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("receive_message", { text, from });
-  } else {
-    console.log(`User ${to} not connected. Message stored.`);
-  }
-});
   // Clean up on disconnect
   socket.on("disconnect", () => {
     for (const [userId, socketId] of Object.entries(users)) {
       if (socketId === socket.id) {
         delete users[userId];
-        console.log(`User ${userId} disconnected`);
         break;
       }
     }
@@ -125,7 +117,9 @@ io.on("connection", (socket) => {
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-app.post("/create-checkout-session", async (req, res) => {
+import { auth } from "./middlewares/auth.js";
+
+app.post("/create-checkout-session", auth, async (req, res) => {
   const { amount, name, reason } = req.body;
 
   try {

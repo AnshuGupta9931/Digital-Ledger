@@ -13,9 +13,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import dotenv from "dotenv"
-dotenv.config({
-    path: './env'
-})
+dotenv.config({ path: "./.env" })
 
 
 //send otp
@@ -44,8 +42,6 @@ export const sendOTP = async (req, res) => {
             lowerCaseAlphabets: false,
             specialChars: false,
         });
-        console.log("OTP Generated: ",otp);
-
         //check unique otp or not
         const result = await OTP.findOne({otp: otp});
 
@@ -62,8 +58,7 @@ export const sendOTP = async (req, res) => {
         const otpPayload = {email, otp};
 
         //create an entry for db
-        const otpBody = await OTP.create(otpPayload);
-        console.log(otpBody);
+        await OTP.create(otpPayload);
 
         const emailTemplate = otpTemplate(otp);
 
@@ -125,7 +120,6 @@ export const signup = async (req, res) => {
 
         //find most recent OTP stored for the user to check whether the user enter the correct otp or not 
         const recentOtp = await OTP.findOne({email}).sort({createdAt: -1});
-        console.log("Recent OTP: ", recentOtp);  //recentOtp is the Otp send to the user via mail which was then stored in db
         //validate OTP
         if(!recentOtp)
         {
@@ -143,6 +137,8 @@ export const signup = async (req, res) => {
                 message: "Invalid OTP.",
             });
         }
+
+        await OTP.deleteOne({ email });
 
         //Hash Password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -198,15 +194,15 @@ export const login = async (req, res) => {
         }
         //user exists or not
         let user = await User.findOne({email}).populate("additionalDetails");
-        if (user.password === "GOOGLE_AUTH") {
-            return res.status(300).json({ message: "Use Google login for this email." });
-          }
         if(!user)
         {
             return res.status(401).json({
                 success: false,
                 message: "User is not registered, please try again.",
             });
+        }
+        if (user.password === process.env.GOOGLE_PASSWORD) {
+            return res.status(401).json({ success: false, message: "Use Google login for this email." });
         }
         
         //generate JWT, after password matching
@@ -225,7 +221,6 @@ export const login = async (req, res) => {
             });
             user = user.toObject();
             delete user.password;
-            console.log("Normal User :",req.user);
             //create cookie and send response
             const options = {
                 expires: new Date(Date.now() + 3*24*60*60*1000),
@@ -271,7 +266,7 @@ export const changePassword = async (req, res) => {
         {
             return res.status(401).json({
                 success: false,
-                message: "The Password is Incoorect.",
+                message: "The Password is Incorrect.",
             });
         }
 
@@ -305,7 +300,6 @@ export const changePassword = async (req, res) => {
                 `Password updated successfully for ${updateUserDetails.firstName} ${updateUserDetails.lastName}`
             )
             )
-            console.log("Email sent successfully:", emailResponse.response)
         }catch (error) {
             // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
             console.error("Error occurred while sending email:", error)

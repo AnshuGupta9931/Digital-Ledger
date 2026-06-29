@@ -6,6 +6,10 @@ export const createDebt = async (req, res) => {
     const { friendId, amount } = req.body;
     const userId = req.user._id;
 
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      return res.status(400).json({ error: "Amount must be a positive number." });
+    }
+
     const newDebt = new Debt({
       user: userId,
       friend: friendId,
@@ -38,13 +42,18 @@ export const settleDebt = async (req, res) => {
   try {
     const { id } = req.body; // ✅ get id from body
 
+    const debt = await Debt.findById(id);
+    if (!debt) return res.status(404).json({ message: "Debt not found" });
+
+    if (debt.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to settle this debt" });
+    }
+
     const updatedDebt = await Debt.findByIdAndUpdate(
       id,
       { isSettled: true },
       { new: true }
     );
-
-    if (!updatedDebt) return res.status(404).json({ message: "Debt not found" });
 
     res.status(200).json({ message: "Debt settled", debt: updatedDebt });
   } catch (err) {
@@ -58,9 +67,14 @@ export const deleteDebt = async (req, res) => {
   try {
     const { id } = req.body; // ✅ Get id from body
 
-    const deletedDebt = await Debt.findByIdAndDelete(id);
+    const existingDebt = await Debt.findById(id);
+    if (!existingDebt) return res.status(404).json({ message: "Debt not found" });
 
-    if (!deletedDebt) return res.status(404).json({ message: "Debt not found" });
+    if (existingDebt.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to delete this debt" });
+    }
+
+    const deletedDebt = await Debt.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Debt deleted", debt: deletedDebt });
   } catch (err) {

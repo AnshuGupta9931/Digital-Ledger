@@ -84,6 +84,8 @@ export function createTransaction(data) {
       }
 
       toast.success("Transaction created");
+      const t = JSON.parse(localStorage.getItem("token"));
+      dispatch(fetchCategories(t));
 
     } catch (err) {
       console.error("CREATE TRANSACTION ERROR:", err);
@@ -152,7 +154,9 @@ export const updateTransactionAPI = (formData) => async (dispatch) => {
 
 export const filterTransactionsAPI = (filters) => async (dispatch) => {
   try {
-    const response = await apiConnector("POST", FILTER_TRANSACTIONS_API, filters);
+    const response = await apiConnector("POST", FILTER_TRANSACTIONS_API, filters, {
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+    });
     dispatch(setTransactions(response.data.transactions));
   } catch (error) {
     console.error("Error filtering transactions:", error);

@@ -4,5 +4,5 @@ const debtSchema = new mongoose.Schema({
   friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   amount: Number,
   isSettled: { type: Boolean, default: false }
-})
+}, { timestamps: true })
 export const Debt = mongoose.model("Debt",debtSchema);

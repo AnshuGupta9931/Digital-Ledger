@@ -65,13 +65,12 @@ export const sendFriendRequest = async (req, res) => {
 // Get pending friend requests
 export const getPendingRequests = async (req, res) => {
   const userId = req.user._id;
-  console.log("Current User:", userId);
 
   try {
     const requests = await friendRequest.find({
       to: userId,
       status: "pending"
-    }).populate("from", "name email");
+    }).populate("from", "firstName lastName email");
 
     res.json(requests);
   } catch (err) {
@@ -84,7 +83,6 @@ export const getPendingRequests = async (req, res) => {
 // Accept friend request
 export const acceptFriendRequest = async (req, res) => {
   const { requestId } = req.body;
-  console.log("Request ID received Accept:", requestId);
 
   try {
     const request = await friendRequest.findById(requestId);
@@ -100,7 +98,6 @@ export const acceptFriendRequest = async (req, res) => {
     const recipient = await User.findById(recipientId);
 
     if (!sender || !recipient) {
-      console.log("User(s) not found. Sender:", sender, "Recipient:", recipient);
       return res.status(404).json({ error: "One of the users not found" });
     }
 
@@ -111,7 +108,6 @@ export const acceptFriendRequest = async (req, res) => {
       $addToSet: { friends: senderId },
     });
 
-    console.log("Friend request accepted between:", sender.email, "and", recipient.email);
     res.json({ message: "Friend request accepted" });
   } catch (err) {
     console.error(err);
@@ -125,7 +121,6 @@ export const acceptFriendRequest = async (req, res) => {
 // Decline friend request
 export const declineFriendRequest = async (req, res) => {
   const { requestId } = req.body;
-  console.log("Request ID received Decline:", requestId);
 
   if (!requestId) {
     return res.status(400).json({ error: "Request ID is required" });

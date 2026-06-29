@@ -6,6 +6,6 @@ const savingSchema  = new mongoose.Schema({
   title: String,
   goalAmount: Number,
   savedAmount: { type: Number, default: 0 }
-})
+}, { timestamps: true })
 
 export const Saving = mongoose.model("Saving",savingSchema);

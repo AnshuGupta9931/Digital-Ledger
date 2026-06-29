@@ -1,6 +1,7 @@
 import {User} from "../models/User.js"
 import {mailSender} from "../utils/mailSender.js"
 import bcrypt from "bcrypt"
+import crypto from "crypto"
 
 // resetPasswordToken
 export const resetPasswordToken = async (req, res) => {

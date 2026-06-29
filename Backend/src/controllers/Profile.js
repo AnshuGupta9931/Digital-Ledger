@@ -1,7 +1,6 @@
 import {Profile} from "../models/Profile.js"
 import {User} from "../models/User.js"
 import {uploadImageToCloudinary} from "../utils/imageUploader.js"
-import {convertSecondsToDuration} from "../utils/secToDuration.js"
 
 export const updateProfile = async(req, res) => {
     try{
@@ -99,8 +98,6 @@ export const deleteAccount = async (req, res) => {
 
 export const updateImage = async (req, res) => {
     try {
-        console.log("Request received at updateImage");
-
         if (!req.files || !req.files.imageFile) {
             return res.status(400).json({
                 success: false,
@@ -109,8 +106,6 @@ export const updateImage = async (req, res) => {
         }
 
         const imageFile = req.files.imageFile;
-        console.log("Image file detected:", imageFile.name);
-
         const userID = req.user.id;
 
         const image = await uploadImageToCloudinary(
@@ -163,6 +158,7 @@ export const getAllUserDetails = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User Details Extracted Successfully.",
+            data: userDetails,
         });
 
     }

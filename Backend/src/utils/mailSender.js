@@ -12,9 +12,6 @@ export const mailSender = async (email, title, body) => {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASS,
             },
-            tls: {
-                rejectUnauthorized: false  // This disables certificate validation
-            }
         });
 
         let info = await transporter.sendMail({
@@ -25,7 +22,6 @@ export const mailSender = async (email, title, body) => {
             html: body,  // Pass `body` directly
         });
 
-        console.log(info);
         return info;
     } catch (error) {
         console.log(error.message);

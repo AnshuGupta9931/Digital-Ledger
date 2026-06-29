@@ -22,10 +22,8 @@ export const auth = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded Token:", decoded);
-
       const userId = decoded._id || decoded.id;
-      const user = await User.findById(userId).select("name email");
+      const user = await User.findById(userId).select("_id firstName lastName email accountType");
       if (!user) {
         return res.status(401).json({ success: false, message: "User not found" });
       }

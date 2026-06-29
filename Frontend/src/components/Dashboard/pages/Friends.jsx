@@ -9,7 +9,7 @@ import {
 } from "../../../services/operations/friendAPI";
 import { io } from "socket.io-client";
 
-const socket = io("https://digital-ledger-backend.onrender.com");
+const BACKEND_URL = "https://digital-ledger-backend.onrender.com";
 
 export const Friends = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ export const Friends = () => {
   const [selectedFriendId, setSelectedFriendId] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const chatEndRef = useRef();
+  const socketRef = useRef(null);
 
   const authUser = useSelector((state) => state.profile.user);
   const currentUserId = authUser?._id;
@@ -33,6 +34,10 @@ export const Friends = () => {
 
   useEffect(() => {
     if (!currentUserId) return;
+
+    const socket = io(BACKEND_URL);
+    socketRef.current = socket;
+
     socket.emit("register", currentUserId);
 
     socket.on("receive_message", ({ from, text }) => {
@@ -43,7 +48,7 @@ export const Friends = () => {
     });
 
     return () => {
-      socket.off("receive_message");
+      socket.disconnect();
     };
   }, [currentUserId]);
 
@@ -67,25 +72,29 @@ export const Friends = () => {
     dispatch(declineFriendAPI(id));
   };
   const handleSelectFriend = async (friend) => {
-  setSelectedFriendId(friend._id);
+    setSelectedFriendId(friend._id);
 
-  try {
-    const res = await fetch(`/api/v1/messages/${currentUserId}/${friend._id}`);
-    const data = await res.json();
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const res = await fetch(
+        `${BACKEND_URL}/api/v1/messages/${currentUserId}/${friend._id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await res.json();
 
-    if (data.success) {
-      setMessages((prev) => ({
-        ...prev,
-        [friend._id]: data.messages.map((msg) => ({
-          text: msg.text,
-          fromUser: msg.from === currentUserId,
-        })),
-      }));
+      if (data.success) {
+        setMessages((prev) => ({
+          ...prev,
+          [friend._id]: data.messages.map((msg) => ({
+            text: msg.text,
+            fromUser: msg.from === currentUserId,
+          })),
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to fetch chat history:", err);
     }
-  } catch (err) {
-    console.error("Failed to fetch chat history:", err);
-  }
-};
+  };
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedFriendId) return;
@@ -95,7 +104,7 @@ export const Friends = () => {
       [selectedFriendId]: [...(prev[selectedFriendId] || []), { text: newMessage, fromUser: true }],
     }));
 
-    socket.emit("private_message", {
+    socketRef.current?.emit("private_message", {
       from: currentUserId,
       to: selectedFriendId,
       text: newMessage,

@@ -17,13 +17,12 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login", session: false }),
   (req, res) => {
-    console.log("Google callback user:", req.user);
     const token = jwt.sign(
       { id: req.user._id, email: req.user.email },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    res.clearCookie(token);
+    res.clearCookie("token");
     // Optional: Redirect with token in query
     res.redirect(
       `https://digital-ledger-frontend.onrender.com/oauth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`

@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import {
   setLoading,
   setGroups,
-  addGroup,
   setCurrentGroup,
   updateGroupInList,
   removeGroup,
@@ -18,13 +17,16 @@ const {
   DELETE_GROUP_API,
 } = groupEndpoints;
 
+const getAuthHeader = () => ({
+  Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+});
+
 // CREATE group
 export const createGroupAPI = ({ name, members }) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    await apiConnector("POST", CREATE_GROUP_API, { name, members });
+    await apiConnector("POST", CREATE_GROUP_API, { name, members }, getAuthHeader());
     toast.success("Group created successfully");
-    // Instead of manually adding (which lacks populated members), refetch:
     dispatch(fetchUserGroupsAPI());
   } catch (err) {
     toast.error(err?.response?.data?.error || "Failed to create group");
@@ -38,7 +40,7 @@ export const createGroupAPI = ({ name, members }) => async (dispatch) => {
 export const fetchUserGroupsAPI = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const res = await apiConnector("GET", GET_USER_GROUPS_API);
+    const res = await apiConnector("GET", GET_USER_GROUPS_API, null, getAuthHeader());
     dispatch(setGroups(res.data.groups));
   } catch (err) {
     toast.error(err?.response?.data?.error || "Failed to fetch groups");
@@ -51,7 +53,7 @@ export const fetchUserGroupsAPI = () => async (dispatch) => {
 export const fetchGroupByIdAPI = (id) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const res = await apiConnector("POST", GET_GROUP_BY_ID_API, { id });
+    const res = await apiConnector("POST", GET_GROUP_BY_ID_API, { id }, getAuthHeader());
     dispatch(setCurrentGroup(res.data.group));
   } catch (err) {
     toast.error(err?.response?.data?.error || "Failed to load group");
@@ -64,7 +66,7 @@ export const fetchGroupByIdAPI = (id) => async (dispatch) => {
 export const updateGroupAPI = ({ id, name, members }) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    await apiConnector("PUT", UPDATE_GROUP_API, { id, name, members });
+    await apiConnector("PUT", UPDATE_GROUP_API, { id, name, members }, getAuthHeader());
     toast.success("Group updated");
     dispatch(fetchUserGroupsAPI());
   } catch (err) {
@@ -79,7 +81,7 @@ export const updateGroupAPI = ({ id, name, members }) => async (dispatch) => {
 export const deleteGroupAPI = (id) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    await apiConnector("DELETE", DELETE_GROUP_API, { id });
+    await apiConnector("DELETE", DELETE_GROUP_API, { id }, getAuthHeader());
     toast.success("Group deleted");
     dispatch(removeGroup(id));
   } catch (err) {
